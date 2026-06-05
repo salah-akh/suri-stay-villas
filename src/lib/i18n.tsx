@@ -1,19 +1,19 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
-export type Lang = "tr" | "ar";
+export type Lang = "tr" | "ar" | "en";
 
-type Dict = Record<string, { tr: string; ar: string }>;
+type Dict = Record<string, { tr: string; ar: string; en: string }>;
 
 export const translations: Dict = {
-  "nav.home": { tr: "Ana Sayfa", ar: "الرئيسية" },
-  "nav.villas": { tr: "Villalar", ar: "الفلل" },
-  "nav.about": { tr: "Hakkımızda", ar: "من نحن" },
-  "nav.contact": { tr: "İletişim", ar: "اتصل بنا" },
-  "nav.help": { tr: "Yardım", ar: "مساعدة" },
-  "nav.listVilla": { tr: "Villanı Yayınla", ar: "أضف فيلتك" },
-  "nav.favorites": { tr: "Favoriler", ar: "المفضلة" },
-  "nav.signIn": { tr: "Giriş Yap", ar: "تسجيل الدخول" },
-  "nav.postListing": { tr: "İlan Ver", ar: "أضف إعلان" },
+  "nav.home": { tr: "Ana Sayfa", ar: "الرئيسية", en: "Home" },
+  "nav.villas": { tr: "Villalar", ar: "الفلل", en: "Villas" },
+  "nav.about": { tr: "Hakkımızda", ar: "من نحن", en: "About" },
+  "nav.contact": { tr: "İletişim", ar: "اتصل بنا", en: "Contact" },
+  "nav.help": { tr: "Yardım", ar: "مساعدة", en: "Help" },
+  "nav.listVilla": { tr: "Villanı Yayınla", ar: "أضف فيلتك", en: "List your villa" },
+  "nav.favorites": { tr: "Favoriler", ar: "المفضلة", en: "Favorites" },
+  "nav.signIn": { tr: "Giriş Yap", ar: "تسجيل الدخول", en: "Sign In" },
+  "nav.postListing": { tr: "İlan Ver", ar: "أضف إعلان", en: "Post Listing" },
 };
 
 type Ctx = {
@@ -29,7 +29,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const stored = (typeof window !== "undefined" && localStorage.getItem("lang")) as Lang | null;
-    if (stored === "tr" || stored === "ar") setLangState(stored);
+    if (stored === "tr" || stored === "ar" || stored === "en") setLangState(stored);
   }, []);
 
   useEffect(() => {
