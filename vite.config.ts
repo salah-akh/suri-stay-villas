@@ -7,6 +7,12 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  // Lovable's default build target is Cloudflare. Vercel needs Nitro's Vercel
+  // preset so SSR routes are emitted as Vercel Functions instead of 404ing.
+  cloudflare: false,
+  nitro: {
+    preset: "vercel",
+  },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
