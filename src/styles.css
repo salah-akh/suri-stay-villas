@@ -67,30 +67,32 @@
 }
 
 :root {
-  --radius: 0.25rem;
-  --background: oklch(0.96 0.003 90);
-  --foreground: oklch(0.18 0.005 270);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.005 270);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.005 270);
-  --primary: oklch(0.92 0.21 105);
-  --primary-foreground: oklch(0.15 0.005 270);
-  --primary-glow: oklch(0.95 0.21 105);
-  --secondary: oklch(0.32 0.01 270);
-  --secondary-foreground: oklch(0.98 0 0);
-  --muted: oklch(0.94 0.003 90);
-  --muted-foreground: oklch(0.45 0.01 270);
-  --accent: oklch(0.94 0.003 90);
-  --accent-foreground: oklch(0.18 0.005 270);
-  --price: oklch(0.55 0.22 28);
-  --link: oklch(0.5 0.18 250);
-  --destructive: oklch(0.55 0.22 28);
+  --radius: 0.5rem;
+  --background: oklch(0.982 0.012 84);
+  --foreground: oklch(0.22 0.035 248);
+  --card: oklch(1 0.003 84);
+  --card-foreground: oklch(0.22 0.035 248);
+  --popover: oklch(1 0.003 84);
+  --popover-foreground: oklch(0.22 0.035 248);
+  --primary: oklch(0.58 0.145 35);
+  --primary-foreground: oklch(0.99 0.008 84);
+  --primary-glow: oklch(0.74 0.118 58);
+  --secondary: oklch(0.26 0.055 230);
+  --secondary-foreground: oklch(0.985 0.008 84);
+  --muted: oklch(0.94 0.018 84);
+  --muted-foreground: oklch(0.47 0.03 248);
+  --accent: oklch(0.87 0.058 176);
+  --accent-foreground: oklch(0.22 0.035 248);
+  --price: oklch(0.52 0.13 152);
+  --link: oklch(0.45 0.12 228);
+  --destructive: oklch(0.55 0.2 28);
   --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.88 0.005 90);
-  --input: oklch(0.92 0.005 90);
-  --ring: oklch(0.5 0.18 250);
-  --shadow-card: 0 1px 2px oklch(0.18 0.005 270 / 0.06);
+  --border: oklch(0.88 0.017 84);
+  --input: oklch(0.9 0.016 84);
+  --ring: oklch(0.58 0.145 35);
+  --shadow-card: 0 12px 28px oklch(0.22 0.035 248 / 0.08);
+  --shadow-soft: 0 18px 48px oklch(0.22 0.035 248 / 0.12);
+  --shadow-elegant: 0 24px 70px oklch(0.22 0.035 248 / 0.16), 0 2px 10px oklch(0.22 0.035 248 / 0.08);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -150,10 +152,15 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
   }
 
   h1, h2, h3, h4, .font-display {
     font-family: var(--font-display);
-    letter-spacing: -0.01em;
+    letter-spacing: 0;
+  }
+
+  img {
+    max-width: 100%;
   }
 }
