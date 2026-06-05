@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import { useMemo, useState, type ReactNode } from "react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   CalendarDays,
   ChevronRight,
@@ -27,26 +27,60 @@ import {
 } from "@/lib/classifieds";
 import { useListingsCatalog } from "@/lib/listing-store";
 
+type SortValue = "default" | "price-asc" | "price-desc";
+
 type SearchListingsPageProps = {
+  mode?: "home" | "results";
   initialQuery?: string;
   initialCity?: string;
   initialType?: string;
+  initialCategory?: string;
+  initialAdvertiser?: string;
+  initialSort?: SortValue;
 };
 
-type SortValue = "default" | "price-asc" | "price-desc";
-
 export function SearchListingsPage({
+  mode = "home",
   initialQuery = "",
   initialCity = "all",
   initialType = "all",
+  initialCategory = "all",
+  initialAdvertiser = "all",
+  initialSort = "default",
 }: SearchListingsPageProps) {
+  const navigate = useNavigate();
   const [query, setQuery] = useState(initialQuery);
   const [city, setCity] = useState(initialCity || "all");
   const [type, setType] = useState(initialType || "all");
-  const [category, setCategory] = useState("all");
-  const [advertiser, setAdvertiser] = useState("all");
-  const [sort, setSort] = useState<SortValue>("default");
+  const [category, setCategory] = useState(normalizeCategory(initialCategory));
+  const [advertiser, setAdvertiser] = useState(initialAdvertiser || "all");
+  const [sort, setSort] = useState<SortValue>(initialSort);
   const { listings, cities, propertyTypes } = useListingsCatalog();
+  const isResultsMode = mode === "results";
+
+  useEffect(() => {
+    setQuery(initialQuery);
+  }, [initialQuery]);
+
+  useEffect(() => {
+    setCity(initialCity || "all");
+  }, [initialCity]);
+
+  useEffect(() => {
+    setType(initialType || "all");
+  }, [initialType]);
+
+  useEffect(() => {
+    setCategory(normalizeCategory(initialCategory));
+  }, [initialCategory]);
+
+  useEffect(() => {
+    setAdvertiser(initialAdvertiser || "all");
+  }, [initialAdvertiser]);
+
+  useEffect(() => {
+    setSort(initialSort);
+  }, [initialSort]);
 
   const countForCategory = (categoryType: string, categoryId: string, categoryTitle: string) =>
     listings.filter(
@@ -114,6 +148,26 @@ export function SearchListingsPage({
     setSort("default");
   };
 
+  const selectCategory = (nextCategory: string) => {
+    const normalizedCategory = normalizeCategory(nextCategory);
+
+    if (!isResultsMode) {
+      void navigate({
+        to: "/listings",
+        search: normalizedCategory === "all" ? {} : { category: normalizedCategory },
+      });
+      return;
+    }
+
+    setCategory(normalizedCategory);
+    setType("all");
+  };
+
+  const selectedCategoryTitle =
+    category === "all"
+      ? "Tum Villa & Yazlik"
+      : listingCategories.find((item) => item.id === category)?.title ?? "Ilanlar";
+
   return (
     <div className="flex min-h-screen flex-col bg-muted/40">
       <SiteHeader />
@@ -122,9 +176,11 @@ export function SearchListingsPage({
           <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-6">
             <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
               <div>
-                <p className="text-sm font-semibold text-primary">Villa ve yazlik ilan pazari</p>
+                <p className="text-sm font-semibold text-primary">
+                  {isResultsMode ? "Kategori ilanlari" : "Villa ve yazlik ilan pazari"}
+                </p>
                 <h1 className="mt-1 text-2xl font-extrabold text-foreground sm:text-3xl">
-                  Aradigin ilani kolayca bul
+                  {isResultsMode ? selectedCategoryTitle : "Aradigin ilani kolayca bul"}
                 </h1>
               </div>
               <div className="hidden lg:block">
@@ -157,7 +213,7 @@ export function SearchListingsPage({
                 active={category === "all"}
                 label="Tum Villa & Yazlik"
                 count={listings.length}
-                onClick={() => setCategory("all")}
+                onClick={() => selectCategory("all")}
               />
               {listingCategories.map((item) => (
                 <SidebarButton
@@ -165,10 +221,7 @@ export function SearchListingsPage({
                   active={category === item.id}
                   label={item.title}
                   count={countForCategory(item.type, item.id, item.title)}
-                  onClick={() => {
-                    setCategory(item.id);
-                    setType("all");
-                  }}
+                  onClick={() => selectCategory(item.id)}
                 />
               ))}
             </div>
@@ -224,33 +277,48 @@ export function SearchListingsPage({
           </aside>
 
           <div className="min-w-0">
-            <div className="lg:hidden">
-              <p className="px-1 text-sm font-extrabold text-foreground">Kategoriler</p>
-              <div className="mt-2 divide-y divide-border/70">
-                <MobileCategoryRow
-                  active={category === "all"}
-                  label="Tum Villa & Yazlik"
-                  description="Tum kiralik villa ve yazlik ilanlari."
-                  count={listings.length}
-                  onClick={() => setCategory("all")}
-                />
-                {listingCategories.map((item) => (
+            {!isResultsMode && (
+              <div className="lg:hidden">
+                <p className="px-1 text-sm font-extrabold text-foreground">Kategoriler</p>
+                <div className="mt-2 divide-y divide-border/70">
                   <MobileCategoryRow
-                    key={item.id}
-                    label={item.title}
-                    description={getCategoryDescription(item.id)}
-                    active={category === item.id}
-                    count={countForCategory(item.type, item.id, item.title)}
-                    onClick={() => {
-                      setCategory(item.id);
-                      setType("all");
-                    }}
+                    active={category === "all"}
+                    label="Tum Villa & Yazlik"
+                    description="Tum kiralik villa ve yazlik ilanlari."
+                    count={listings.length}
+                    onClick={() => selectCategory("all")}
                   />
-                ))}
+                  {listingCategories.map((item) => (
+                    <MobileCategoryRow
+                      key={item.id}
+                      label={item.title}
+                      description={getCategoryDescription(item.id)}
+                      active={category === item.id}
+                      count={countForCategory(item.type, item.id, item.title)}
+                      onClick={() => selectCategory(item.id)}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
-            <div className="hidden lg:block">
+            <div className={isResultsMode ? "block" : "hidden lg:block"}>
+              {isResultsMode && (
+                <MobileResultsFilters
+                  category={category}
+                  city={city}
+                  type={type}
+                  sort={sort}
+                  cities={cities}
+                  propertyTypes={propertyTypes}
+                  onCategoryChange={selectCategory}
+                  onCityChange={setCity}
+                  onTypeChange={setType}
+                  onSortChange={setSort}
+                  onClear={clearFilters}
+                />
+              )}
+
               <div className="mb-4 rounded-lg border border-border/80 bg-card p-4 shadow-[var(--shadow-card)]">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
@@ -259,7 +327,7 @@ export function SearchListingsPage({
                       Kategoriden sec, ilana bas, detay ve iletisim bilgilerini gor.
                     </p>
                   </div>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="hidden flex-wrap gap-2 lg:flex">
                     <SortButton active={sort === "default"} label="Varsayilan" onClick={() => setSort("default")} />
                     <SortButton active={sort === "price-asc"} label="Ucuzdan pahaliya" onClick={() => setSort("price-asc")} />
                     <SortButton active={sort === "price-desc"} label="Pahalidan ucuza" onClick={() => setSort("price-desc")} />
@@ -315,6 +383,118 @@ function getCategoryDescription(categoryId: string) {
   };
 
   return descriptions[categoryId] ?? "Bu kategoriye ait kiralik konaklamalar.";
+}
+
+function normalizeCategory(categoryId?: string) {
+  if (!categoryId || categoryId === "all") return "all";
+
+  return listingCategories.some((item) => item.id === categoryId) ? categoryId : "all";
+}
+
+function MobileResultsFilters({
+  category,
+  city,
+  type,
+  sort,
+  cities,
+  propertyTypes,
+  onCategoryChange,
+  onCityChange,
+  onTypeChange,
+  onSortChange,
+  onClear,
+}: {
+  category: string;
+  city: string;
+  type: string;
+  sort: SortValue;
+  cities: string[];
+  propertyTypes: string[];
+  onCategoryChange: (value: string) => void;
+  onCityChange: (value: string) => void;
+  onTypeChange: (value: string) => void;
+  onSortChange: (value: SortValue) => void;
+  onClear: () => void;
+}) {
+  return (
+    <div className="mb-4 rounded-lg border border-border/80 bg-card p-3 shadow-[var(--shadow-card)] lg:hidden">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <div>
+          <p className="text-sm font-extrabold text-foreground">Filtrele ve sirala</p>
+          <p className="mt-1 text-xs text-muted-foreground">Sonuclari daralt, fiyata gore sirala.</p>
+        </div>
+        <Button variant="outline" onClick={onClear} className="h-9 bg-background px-3 text-xs font-bold">
+          <X className="h-4 w-4" /> Temizle
+        </Button>
+      </div>
+
+      <div className="grid gap-3">
+        <MobileSelect label="Kategori" value={category} onChange={onCategoryChange}>
+          <option value="all">Tum Villa & Yazlik</option>
+          {listingCategories.map((item) => (
+            <option key={item.id} value={item.id}>
+              {item.title}
+            </option>
+          ))}
+        </MobileSelect>
+
+        <div className="grid grid-cols-2 gap-3">
+          <MobileSelect label="Sehir" value={city} onChange={onCityChange}>
+            <option value="all">Tum sehirler</option>
+            {cities.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </MobileSelect>
+
+          <MobileSelect label="Ilan tipi" value={type} onChange={onTypeChange}>
+            <option value="all">Tum tipler</option>
+            {propertyTypes.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </MobileSelect>
+        </div>
+
+        <MobileSelect
+          label="Siralama"
+          value={sort}
+          onChange={(value) => onSortChange(value as SortValue)}
+        >
+          <option value="default">Varsayilan</option>
+          <option value="price-asc">Ucuzdan pahaliya</option>
+          <option value="price-desc">Pahalidan ucuza</option>
+        </MobileSelect>
+      </div>
+    </div>
+  );
+}
+
+function MobileSelect({
+  label,
+  value,
+  onChange,
+  children,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  children: ReactNode;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-1.5 block text-xs font-extrabold text-muted-foreground">{label}</span>
+      <select
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className="h-11 w-full rounded-md border border-border/80 bg-background px-3 text-sm font-bold text-foreground outline-none transition focus:border-primary"
+      >
+        {children}
+      </select>
+    </label>
+  );
 }
 
 function MobileCategoryRow({
