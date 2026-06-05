@@ -155,6 +155,12 @@
     text-rendering: optimizeLegibility;
   }
 
+  @media (max-width: 767px) {
+    body {
+      padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+    }
+  }
+
   h1, h2, h3, h4, .font-display {
     font-family: var(--font-display);
     letter-spacing: 0;

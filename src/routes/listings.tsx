@@ -1,7 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { z } from "zod";
-import { ArrowUpDown, ChevronRight, MapPin, Shield, SlidersHorizontal, Sun, X } from "lucide-react";
+import { ArrowUpDown, MapPin, Shield, SlidersHorizontal, Sun, X } from "lucide-react";
 import { AdSlot } from "@/components/AdSlot";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -137,31 +137,21 @@ function ListingsPage() {
       <SiteHeader />
       <main className="flex-1 bg-muted/40">
         <section className="border-b border-border/70 bg-card">
-          <div className="mx-auto max-w-7xl px-4 py-7 sm:px-6">
-            <div className="flex flex-wrap items-center gap-1 text-sm text-muted-foreground">
-              <Link to="/" className="hover:text-link">
-                Home
-              </Link>
-              <ChevronRight className="h-4 w-4" />
-              <span className="text-foreground">Villas in Syria</span>
-              {city !== "all" && (
-                <>
-                  <ChevronRight className="h-4 w-4" />
-                  <span className="text-foreground">{city}</span>
-                </>
-              )}
-            </div>
-            <div className="mt-5 flex flex-wrap items-end justify-between gap-4">
+          <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-7">
+            <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
                 <p className="flex items-center gap-2 text-sm font-semibold text-primary">
-                  <MapPin className="h-4 w-4" /> Curated destinations
+                  <MapPin className="h-4 w-4" /> Villa arama
                 </p>
                 <h1 className="mt-2 text-3xl font-extrabold text-foreground sm:text-4xl">
-                  Find your next private stay
+                  Uygun villalari bul
                 </h1>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  Sehir, fiyat ve olanaklara gore filtrele.
+                </p>
               </div>
               <div className="rounded-lg border border-border/80 bg-background px-4 py-3 text-sm text-muted-foreground">
-                <span className="font-extrabold text-foreground">{filtered.length}</span> stays available
+                <span className="font-extrabold text-foreground">{filtered.length}</span> ilan
               </div>
             </div>
           </div>

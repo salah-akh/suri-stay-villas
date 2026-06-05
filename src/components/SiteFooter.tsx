@@ -3,7 +3,7 @@ import { Facebook, Home, Instagram, Mail, Phone } from "lucide-react";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-white/10 bg-secondary text-secondary-foreground">
+    <footer className="hidden border-t border-white/10 bg-secondary text-secondary-foreground md:block">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_0.8fr_0.8fr_1fr]">
         <div>
           <div className="flex items-center gap-3">
