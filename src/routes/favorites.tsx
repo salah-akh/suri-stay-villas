@@ -30,7 +30,7 @@ function FavoritesPage() {
       <SiteHeader />
       <main className="flex-1 px-4 py-5 sm:px-6 sm:py-8">
         <section className="mx-auto max-w-md">
-          <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary/10 text-primary">
+          <span className="flex h-11 w-11 items-center justify-center rounded-md bg-coral/15 text-coral">
             <Heart className="h-5 w-5" />
           </span>
           <h1 className="mt-4 text-2xl font-extrabold text-foreground">Favoriler</h1>

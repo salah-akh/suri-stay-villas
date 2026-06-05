@@ -20,7 +20,7 @@ export function SiteHeader() {
         <AdSlot slotId="top" variant="top" />
         <div className="relative mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6">
           <Link to="/" className="flex min-w-0 items-center gap-2">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-[var(--shadow-card)]">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-primary to-link text-primary-foreground shadow-[var(--shadow-card)]">
               <Home className="h-4 w-4" />
             </span>
             <span className="hidden min-w-0 leading-none md:block">

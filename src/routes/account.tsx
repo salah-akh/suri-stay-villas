@@ -45,9 +45,9 @@ function AccountPage() {
           </div>
 
           <div className="divide-y divide-border/70 border-b border-border/70">
-            <AccountItem icon={<Languages className="h-4 w-4" />} title="Dil" text="Arapca / Ingilizce secimi" />
-            <AccountItem icon={<Home className="h-4 w-4" />} title="Ilanlarim" text="Yayindaki ilanlarinizi takip edin" />
-            <AccountItem icon={<Heart className="h-4 w-4" />} title="Favoriler" text="Kaydettiginiz ilanlara gidin" />
+            <AccountItem icon={<Languages className="h-4 w-4" />} title="Dil" text="Arapca / Ingilizce secimi" tone="sky" />
+            <AccountItem icon={<Home className="h-4 w-4" />} title="Ilanlarim" text="Yayindaki ilanlarinizi takip edin" tone="sand" />
+            <AccountItem icon={<Heart className="h-4 w-4" />} title="Favoriler" text="Kaydettiginiz ilanlara gidin" tone="coral" />
           </div>
 
           {user ? (
@@ -76,10 +76,26 @@ function AccountPage() {
   );
 }
 
-function AccountItem({ icon, title, text }: { icon: ReactNode; title: string; text: string }) {
+function AccountItem({
+  icon,
+  title,
+  text,
+  tone,
+}: {
+  icon: ReactNode;
+  title: string;
+  text: string;
+  tone: "sky" | "sand" | "coral";
+}) {
+  const iconClass = {
+    sky: "bg-sky/15 text-link",
+    sand: "bg-sand/20 text-sand-foreground",
+    coral: "bg-coral/15 text-coral",
+  }[tone];
+
   return (
     <div className="flex items-start gap-3 py-4">
-      <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+      <span className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${iconClass}`}>
         {icon}
       </span>
       <span className="min-w-0 flex-1">

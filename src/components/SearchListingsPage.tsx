@@ -281,23 +281,25 @@ export function SearchListingsPage({
               <div className="lg:hidden">
                 <p className="px-1 text-sm font-extrabold text-foreground">Kategoriler</p>
                 <div className="mt-2 divide-y divide-border/70">
+                <MobileCategoryRow
+                  active={category === "all"}
+                  label="Tum Villa & Yazlik"
+                  description="Tum kiralik villa ve yazlik ilanlari."
+                  count={listings.length}
+                  tone="primary"
+                  onClick={() => selectCategory("all")}
+                />
+                {listingCategories.map((item) => (
                   <MobileCategoryRow
-                    active={category === "all"}
-                    label="Tum Villa & Yazlik"
-                    description="Tum kiralik villa ve yazlik ilanlari."
-                    count={listings.length}
-                    onClick={() => selectCategory("all")}
+                    key={item.id}
+                    label={item.title}
+                    description={getCategoryDescription(item.id)}
+                    active={category === item.id}
+                    count={countForCategory(item.type, item.id, item.title)}
+                    tone={getCategoryTone(item.id)}
+                    onClick={() => selectCategory(item.id)}
                   />
-                  {listingCategories.map((item) => (
-                    <MobileCategoryRow
-                      key={item.id}
-                      label={item.title}
-                      description={getCategoryDescription(item.id)}
-                      active={category === item.id}
-                      count={countForCategory(item.type, item.id, item.title)}
-                      onClick={() => selectCategory(item.id)}
-                    />
-                  ))}
+                ))}
                 </div>
               </div>
             )}
@@ -389,6 +391,19 @@ function normalizeCategory(categoryId?: string) {
   if (!categoryId || categoryId === "all") return "all";
 
   return listingCategories.some((item) => item.id === categoryId) ? categoryId : "all";
+}
+
+function getCategoryTone(categoryId: string): ToneName {
+  const tones: Record<string, ToneName> = {
+    "daily-villa": "primary",
+    "summer-house": "sand",
+    "beach-villa": "sky",
+    "private-villa": "coral",
+    "mountain-house": "primary",
+    bungalow: "sand",
+  };
+
+  return tones[categoryId] ?? "primary";
 }
 
 function MobileResultsFilters({
@@ -502,14 +517,18 @@ function MobileCategoryRow({
   description,
   count,
   active,
+  tone = "primary",
   onClick,
 }: {
   label: string;
   description: string;
   count: number;
   active: boolean;
+  tone?: ToneName;
   onClick: () => void;
 }) {
+  const toneClass = toneClasses[tone];
+
   return (
     <button
       type="button"
@@ -520,7 +539,7 @@ function MobileCategoryRow({
     >
       <span
         className={`mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${
-          active ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary"
+          active ? toneClass.active : toneClass.soft
         }`}
       >
         <Home className="h-4 w-4" />
@@ -538,6 +557,27 @@ function MobileCategoryRow({
     </button>
   );
 }
+
+type ToneName = "primary" | "sand" | "sky" | "coral";
+
+const toneClasses: Record<ToneName, { soft: string; active: string }> = {
+  primary: {
+    soft: "bg-primary/10 text-primary",
+    active: "bg-primary text-primary-foreground",
+  },
+  sand: {
+    soft: "bg-sand/20 text-sand-foreground",
+    active: "bg-sand text-sand-foreground",
+  },
+  sky: {
+    soft: "bg-sky/15 text-link",
+    active: "bg-sky text-sky-foreground",
+  },
+  coral: {
+    soft: "bg-coral/15 text-coral",
+    active: "bg-coral text-coral-foreground",
+  },
+};
 
 function SidebarTitle({ icon, title }: { icon: ReactNode; title: string }) {
   return (

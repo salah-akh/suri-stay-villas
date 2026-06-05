@@ -210,6 +210,7 @@ function PostListingPage() {
               <div className="mt-4 divide-y divide-border/70 border-y border-border/70">
                 {listingCategories.map((category) => {
                   const active = formatCategoryPath(draft.categoryPath) === formatCategoryPath(category.path);
+                  const toneClass = getPostCategoryTone(category.id);
                   return (
                     <button
                       key={category.id}
@@ -224,7 +225,7 @@ function PostListingPage() {
                     >
                       <span
                         className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${
-                          active ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary"
+                          active ? toneClass.active : toneClass.soft
                         }`}
                       >
                         <Home className="h-4 w-4" />
@@ -463,6 +464,37 @@ function PostListingPage() {
       <SiteFooter />
     </div>
   );
+}
+
+function getPostCategoryTone(categoryId: string) {
+  const tones: Record<string, { soft: string; active: string }> = {
+    "daily-villa": {
+      soft: "bg-primary/10 text-primary",
+      active: "bg-primary text-primary-foreground",
+    },
+    "summer-house": {
+      soft: "bg-sand/20 text-sand-foreground",
+      active: "bg-sand text-sand-foreground",
+    },
+    "beach-villa": {
+      soft: "bg-sky/15 text-link",
+      active: "bg-sky text-sky-foreground",
+    },
+    "private-villa": {
+      soft: "bg-coral/15 text-coral",
+      active: "bg-coral text-coral-foreground",
+    },
+    "mountain-house": {
+      soft: "bg-primary/10 text-primary",
+      active: "bg-primary text-primary-foreground",
+    },
+    bungalow: {
+      soft: "bg-sand/20 text-sand-foreground",
+      active: "bg-sand text-sand-foreground",
+    },
+  };
+
+  return tones[categoryId] ?? tones["daily-villa"];
 }
 
 function Field({

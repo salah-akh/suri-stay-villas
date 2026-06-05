@@ -4,7 +4,7 @@ import { Heart, Home, MessageCircle, Plus, User } from "lucide-react";
 const navItemClass =
   "flex min-h-12 flex-col items-center justify-center gap-1 rounded-md text-[11px] font-bold text-muted-foreground";
 const activeNavItemClass =
-  "flex min-h-12 flex-col items-center justify-center gap-1 rounded-md bg-primary/10 text-[11px] font-bold text-primary";
+  "flex min-h-12 flex-col items-center justify-center gap-1 rounded-md bg-sky/15 text-[11px] font-bold text-primary";
 
 export function AppBottomNav() {
   return (
@@ -29,10 +29,10 @@ export function AppBottomNav() {
         </Link>
         <Link
           to="/post-listing"
-          className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-md bg-primary text-[11px] font-extrabold text-primary-foreground shadow-[var(--shadow-card)]"
+          className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-md bg-gradient-to-br from-primary to-link text-[11px] font-extrabold text-primary-foreground shadow-[var(--shadow-card)]"
           activeProps={{
             className:
-              "flex min-h-14 flex-col items-center justify-center gap-1 rounded-md bg-primary text-[11px] font-extrabold text-primary-foreground shadow-[var(--shadow-card)]",
+              "flex min-h-14 flex-col items-center justify-center gap-1 rounded-md bg-gradient-to-br from-primary to-link text-[11px] font-extrabold text-primary-foreground shadow-[var(--shadow-card)]",
           }}
         >
           <span className="flex h-7 w-7 items-center justify-center rounded-md bg-white/15">

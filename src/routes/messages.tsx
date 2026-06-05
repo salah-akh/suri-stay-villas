@@ -103,11 +103,13 @@ function MessagesPage() {
                 icon={<Inbox className="h-4 w-4" />}
                 title="Gelen mesajlar"
                 text="Ev sahibi oldugunuz ilanlardan gelenler."
+                tone="sky"
               />
               <MessageMenuRow
                 icon={<Send className="h-4 w-4" />}
                 title="Gonderilen mesajlar"
                 text="Kiralamak istediginiz ilanlara yazdiklariniz."
+                tone="coral"
               />
             </div>
           )}
@@ -122,10 +124,22 @@ function MessagesPage() {
   );
 }
 
-function MessageMenuRow({ icon, title, text }: { icon: ReactNode; title: string; text: string }) {
+function MessageMenuRow({
+  icon,
+  title,
+  text,
+  tone,
+}: {
+  icon: ReactNode;
+  title: string;
+  text: string;
+  tone: "sky" | "coral";
+}) {
+  const iconClass = tone === "sky" ? "bg-sky/15 text-link" : "bg-coral/15 text-coral";
+
   return (
     <div className="flex items-start gap-3 py-4">
-      <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+      <span className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${iconClass}`}>
         {icon}
       </span>
       <span className="min-w-0">
