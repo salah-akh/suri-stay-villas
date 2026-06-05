@@ -60,7 +60,7 @@ function ListingDetail() {
               <img src={listing.gallery[activeImg]} alt={listing.title} className="aspect-[16/10] w-full object-cover" />
             </div>
             <div className="flex gap-3 sm:flex-col">
-              {listing.gallery.map((g, i) => (
+              {listing.gallery.map((g: string, i: number) => (
                 <button key={i} onClick={() => setActiveImg(i)} className={`flex-1 overflow-hidden rounded-xl border-2 transition ${activeImg === i ? "border-primary" : "border-transparent"}`}>
                   <img src={g} alt="" className="aspect-square w-full object-cover" />
                 </button>
