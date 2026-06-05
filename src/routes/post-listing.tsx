@@ -467,6 +467,10 @@ function PostListingPage() {
 }
 
 function getPostCategoryTone(categoryId: string) {
+  const defaultTone = {
+    soft: "bg-primary/10 text-primary",
+    active: "bg-primary text-primary-foreground",
+  };
   const tones: Record<string, { soft: string; active: string }> = {
     "daily-villa": {
       soft: "bg-primary/10 text-primary",
@@ -494,7 +498,7 @@ function getPostCategoryTone(categoryId: string) {
     },
   };
 
-  return tones[categoryId] ?? tones["daily-villa"];
+  return tones[categoryId] ?? defaultTone;
 }
 
 function Field({
