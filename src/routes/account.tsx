@@ -38,8 +38,8 @@ function AccountPage() {
             </p>
             <p className="mt-1 text-xs leading-5 text-muted-foreground">
               {user
-                ? "Mesaj gonderebilir ve mesajlarinizi gorebilirsiniz."
-                : "Mesaj gondermek istediginizde mail ve sifre ile hesap olusturmaniz istenecek."}
+                ? "Mesaj gonderebilir, mesajlarinizi gorebilir ve ilan verebilirsiniz."
+                : "Mesaj gondermek veya ilan vermek istediginizde mail ve sifre ile hesap olusturmaniz istenecek."}
             </p>
           </div>
           <div className="mt-5 grid gap-3">

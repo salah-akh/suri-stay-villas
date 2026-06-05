@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Home, ImagePlus, Phone, Ruler, Send, Shield, Sun, User } from "lucide-react";
+import { ArrowLeft, Home, ImagePlus, Lock, Mail, Phone, Ruler, Send, Shield, Sun, User } from "lucide-react";
 import { useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 import { toast } from "sonner";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -17,6 +17,7 @@ import {
   listingCategories,
   roomOptions,
 } from "@/lib/classifieds";
+import { useAuthUser } from "@/lib/auth-store";
 import {
   createListingFromDraft,
   type ListingDraft,
@@ -59,6 +60,7 @@ export const Route = createFileRoute("/post-listing")({
 function PostListingPage() {
   const navigate = Route.useNavigate();
   const { addUserListing } = useListingsCatalog();
+  const { user, login } = useAuthUser();
   const [draft, setDraft] = useState<ListingDraft>(initialDraft);
   const [imageName, setImageName] = useState("");
 
@@ -163,24 +165,36 @@ function PostListingPage() {
               Villa veya yazligini yayinla
             </h1>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-              Once kategoriyi sec, sonra ilan bilgilerini gir. Yayinlandiktan sonra ilan listede gorunur.
+              {user
+                ? "Once kategoriyi sec, sonra ilan bilgilerini gir. Yayinlandiktan sonra ilan listede gorunur."
+                : "Ilan vermek icin once mail ve sifre ile giris yapin veya hesap olusturun."}
             </p>
           </div>
         </section>
 
         <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6">
-          <div className="mb-4 grid gap-2 rounded-lg border border-border/80 bg-card p-4 text-sm shadow-[var(--shadow-card)] sm:grid-cols-3">
-            {["1. Kategori sec", "2. Ilan bilgileri", "3. Fotograf ve iletisim"].map((step) => (
-              <div key={step} className="rounded-md bg-primary/10 px-3 py-2 font-extrabold text-primary">
-                {step}
+          {!user ? (
+            <PostListingAuthGate onAuth={login} />
+          ) : (
+            <>
+              <div className="mb-4 rounded-lg border border-border/80 bg-card p-4 shadow-[var(--shadow-card)]">
+                <p className="flex items-center gap-2 text-sm font-extrabold text-foreground">
+                  <Mail className="h-4 w-4 text-primary" /> Giris yapan hesap: {user.email}
+                </p>
               </div>
-            ))}
-          </div>
 
-          <form
-            onSubmit={onSubmit}
-            className="rounded-lg border border-border/80 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6"
-          >
+              <div className="mb-4 grid gap-2 rounded-lg border border-border/80 bg-card p-4 text-sm shadow-[var(--shadow-card)] sm:grid-cols-3">
+                {["1. Kategori sec", "2. Ilan bilgileri", "3. Fotograf ve iletisim"].map((step) => (
+                  <div key={step} className="rounded-md bg-primary/10 px-3 py-2 font-extrabold text-primary">
+                    {step}
+                  </div>
+                ))}
+              </div>
+
+              <form
+                onSubmit={onSubmit}
+                className="rounded-lg border border-border/80 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6"
+              >
             <section className="mb-6">
               <h2 className="text-lg font-extrabold text-foreground">Kategori sec</h2>
               <p className="mt-1 text-sm text-muted-foreground">
@@ -428,11 +442,91 @@ function PostListingPage() {
             >
               <Send className="h-4 w-4" /> Ilani yayinla
             </Button>
-          </form>
+              </form>
+            </>
+          )}
         </div>
       </main>
       <SiteFooter />
     </div>
+  );
+}
+
+function PostListingAuthGate({
+  onAuth,
+}: {
+  onAuth: (email: string, password: string) => boolean;
+}) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const submitAuth = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const ok = onAuth(email, password);
+
+    if (!ok) {
+      setError("Gecerli bir mail ve en az 4 karakterli sifre girin.");
+    }
+  };
+
+  return (
+    <form
+      onSubmit={submitAuth}
+      className="rounded-lg border border-primary/20 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6"
+    >
+      <span className="flex h-12 w-12 items-center justify-center rounded-md bg-primary/10 text-primary">
+        <Lock className="h-5 w-5" />
+      </span>
+      <h2 className="mt-4 text-2xl font-extrabold text-foreground">Ilan vermek icin hesap gerekli</h2>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+        Ilan yayinlamak icin mail ve sifre ile giris yapin veya hizlica hesap olusturun.
+      </p>
+
+      <Field label="Mail adresi" id="post-auth-email" className="mt-5">
+        <div className="relative">
+          <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
+          <Input
+            id="post-auth-email"
+            type="email"
+            value={email}
+            onChange={(event) => {
+              setEmail(event.target.value);
+              setError("");
+            }}
+            placeholder="ornek@mail.com"
+            className="h-11 rounded-md bg-background pl-9"
+          />
+        </div>
+      </Field>
+
+      <Field label="Sifre" id="post-auth-password" className="mt-4">
+        <div className="relative">
+          <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
+          <Input
+            id="post-auth-password"
+            type="password"
+            value={password}
+            onChange={(event) => {
+              setPassword(event.target.value);
+              setError("");
+            }}
+            placeholder="En az 4 karakter"
+            className="h-11 rounded-md bg-background pl-9"
+          />
+        </div>
+      </Field>
+
+      {error && (
+        <p className="mt-4 rounded-md bg-destructive/10 px-3 py-2 text-xs font-bold text-destructive">
+          {error}
+        </p>
+      )}
+
+      <Button type="submit" size="lg" className="mt-5 w-full bg-primary text-primary-foreground hover:bg-primary/90">
+        Giris yap / hesap olustur
+      </Button>
+    </form>
   );
 }
 
