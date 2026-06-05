@@ -1,11 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
-import { ArrowLeft, Camera, Check, Home, MapPin, MessageCircle } from "lucide-react";
+import { ArrowLeft, CalendarDays, Camera, Check, Grid2X2, Hash, Home, MapPin, MessageCircle, Ruler, User } from "lucide-react";
 import { AdSlot } from "@/components/AdSlot";
 import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { listings } from "@/data/listings";
+import {
+  defaultAreaFromId,
+  defaultDateFromId,
+  defaultRoomFromId,
+  formatCategoryPath,
+  listingNoFromId,
+} from "@/lib/classifieds";
 import { useUserListings } from "@/lib/listing-store";
 
 export const Route = createFileRoute("/listings/$id")({
@@ -54,13 +61,20 @@ function ListingDetail() {
   }
 
   const gallery = listing.gallery.length ? listing.gallery : [listing.image_url];
+  const listingNo = listing.listing_no ?? listingNoFromId(listing.id);
+  const area = listing.area_m2 ?? defaultAreaFromId(listing.id);
+  const room = listing.room_count ?? defaultRoomFromId(listing.id);
+  const publishedAt = listing.published_at ?? defaultDateFromId(listing.id);
+  const advertiserType = listing.advertiser_type ?? "Ev sahibinden";
+  const contactName = listing.contact_name ?? "Ev sahibi";
+  const contactPhone = listing.contact_phone ?? "+963 11 000 0000";
   const amenities = [
     { ok: listing.amenities.has_solar_power, label: "Gunes enerjisi" },
     { ok: listing.amenities.is_conservative_private, label: "Aileye uygun / ozel alan" },
   ].filter((item) => item.ok);
   const whatsappUrl = () => {
-    const msg = `Merhaba Hajazna! ${listing.title} ilaniyla ilgileniyorum. Konum: ${listing.city} / ${listing.region}.`;
-    return `https://wa.me/963000000000?text=${encodeURIComponent(msg)}`;
+    const msg = `Merhaba Hajazna! ${listingNo} numarali ${listing.title} ilaniyla ilgileniyorum. Konum: ${listing.city} / ${listing.region}.`;
+    return `https://wa.me/${contactPhone.replace(/\D/g, "") || "963000000000"}?text=${encodeURIComponent(msg)}`;
   };
 
   return (
@@ -76,6 +90,7 @@ function ListingDetail() {
           </Link>
 
           <section className="rounded-lg border border-border/80 bg-card p-4 shadow-[var(--shadow-card)] sm:p-5">
+            <p className="text-xs font-extrabold text-primary">{formatCategoryPath(listing.category_path)}</p>
             <h1 className="text-3xl font-extrabold leading-tight text-foreground sm:text-4xl">
               {listing.title}
             </h1>
@@ -85,6 +100,12 @@ function ListingDetail() {
                 ${listing.price_per_night} / gece
               </span>
             </p>
+            <div className="mt-4 grid gap-2 sm:grid-cols-4">
+              <InfoPill icon={<Hash className="h-4 w-4" />} label="İlan No" value={listingNo} />
+              <InfoPill icon={<Ruler className="h-4 w-4" />} label="m²" value={`${area} m²`} />
+              <InfoPill icon={<Grid2X2 className="h-4 w-4" />} label="Oda" value={room} />
+              <InfoPill icon={<CalendarDays className="h-4 w-4" />} label="Tarih" value={publishedAt} />
+            </div>
           </section>
 
           <section className="mt-4 overflow-hidden rounded-lg border border-border/80 bg-card shadow-[var(--shadow-card)]">
@@ -127,6 +148,10 @@ function ListingDetail() {
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
                   <InfoRow icon={<Home className="h-4 w-4" />} label="Tip" value={listing.property_type} />
                   <InfoRow icon={<MapPin className="h-4 w-4" />} label="Konum" value={`${listing.city} / ${listing.region}`} />
+                  <InfoRow icon={<Ruler className="h-4 w-4" />} label="m²" value={`${area} m²`} />
+                  <InfoRow icon={<Grid2X2 className="h-4 w-4" />} label="Oda sayısı" value={room} />
+                  <InfoRow icon={<User className="h-4 w-4" />} label="İlan veren" value={advertiserType} />
+                  <InfoRow icon={<CalendarDays className="h-4 w-4" />} label="İlan tarihi" value={publishedAt} />
                 </div>
               </div>
 
@@ -162,6 +187,12 @@ function ListingDetail() {
                 <div className="text-3xl font-extrabold text-foreground">${listing.price_per_night}</div>
                 <p className="mt-1 text-sm text-muted-foreground">Gecelik fiyat</p>
               </div>
+              <div className="mt-5 rounded-lg bg-muted/70 p-4">
+                <p className="text-xs font-semibold text-muted-foreground">İlan veren</p>
+                <p className="mt-1 font-extrabold text-foreground">{contactName}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{advertiserType}</p>
+                <p className="mt-2 text-sm font-semibold text-primary">{contactPhone}</p>
+              </div>
               <Button asChild size="lg" className="mt-5 w-full bg-primary text-primary-foreground hover:bg-primary/90">
                 <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">
                   <MessageCircle className="h-5 w-5" /> WhatsApp ile sor
@@ -176,6 +207,18 @@ function ListingDetail() {
         </div>
       </main>
       <SiteFooter />
+    </div>
+  );
+}
+
+function InfoPill({ icon, label, value }: { icon: ReactNode; label: string; value: string }) {
+  return (
+    <div className="rounded-md bg-muted/70 p-3">
+      <p className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+        <span className="text-primary">{icon}</span>
+        {label}
+      </p>
+      <p className="mt-1 truncate text-sm font-extrabold text-foreground">{value}</p>
     </div>
   );
 }

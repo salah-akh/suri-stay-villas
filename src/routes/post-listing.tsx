@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, ImagePlus, Send, Sun, Shield } from "lucide-react";
+import { ArrowLeft, Home, ImagePlus, Phone, Ruler, Send, Shield, Sun, User } from "lucide-react";
 import { useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 import { toast } from "sonner";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -8,7 +8,15 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  advertiserTypes,
+  defaultCategoryPath,
+  formatCategoryPath,
+  listingCategories,
+  roomOptions,
+} from "@/lib/classifieds";
 import {
   createListingFromDraft,
   type ListingDraft,
@@ -16,12 +24,18 @@ import {
 } from "@/lib/listing-store";
 
 const initialDraft: ListingDraft = {
+  categoryPath: [...defaultCategoryPath],
   title: "",
   description: "",
   propertyType: "Villa",
   city: "",
   region: "",
   pricePerNight: 100,
+  areaM2: 120,
+  roomCount: roomOptions[2],
+  advertiserType: advertiserTypes[0],
+  contactName: "",
+  contactPhone: "",
   imageUrl: "",
   hasSolarPower: false,
   isConservativePrivate: false,
@@ -104,8 +118,18 @@ function PostListingPage() {
       return;
     }
 
+    if (!Number.isFinite(draft.areaM2) || draft.areaM2 <= 0) {
+      toast.error("Gecerli bir m² bilgisi yazin.");
+      return;
+    }
+
     if (!Number.isFinite(draft.pricePerNight) || draft.pricePerNight <= 0) {
       toast.error("Gecerli bir gecelik fiyat yazin.");
+      return;
+    }
+
+    if (!draft.contactName.trim() || !draft.contactPhone.trim()) {
+      toast.error("Ilan veren adi ve telefon alanlarini doldurun.");
       return;
     }
 
@@ -133,20 +157,20 @@ function PostListingPage() {
               <ArrowLeft className="h-4 w-4" /> Ana sayfa
             </Link>
             <p className="flex items-center gap-2 text-sm font-semibold text-primary">
-              <Send className="h-4 w-4" /> Direkt ilan ver
+              <Send className="h-4 w-4" /> Ücretsiz ilan ver
             </p>
             <h1 className="mt-2 text-3xl font-extrabold text-foreground sm:text-4xl">
-              Villa veya yazligini yayinla
+              Villa veya yazlığını yayınla
             </h1>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-              Formu doldurun, ilaniniz bu uygulamada hemen listelensin.
+              Önce kategoriyi seç, sonra ilan bilgilerini gir. Yayınlandıktan sonra ilan listede görünür.
             </p>
           </div>
         </section>
 
         <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6">
           <div className="mb-4 grid gap-2 rounded-lg border border-border/80 bg-card p-4 text-sm shadow-[var(--shadow-card)] sm:grid-cols-3">
-            {["1. Bilgileri yaz", "2. Fotograf yukle", "3. Ilani yayinla"].map((step) => (
+            {["1. Kategori seç", "2. İlan bilgileri", "3. Fotoğraf ve iletişim"].map((step) => (
               <div key={step} className="rounded-md bg-primary/10 px-3 py-2 font-extrabold text-primary">
                 {step}
               </div>
@@ -157,7 +181,40 @@ function PostListingPage() {
             onSubmit={onSubmit}
             className="rounded-lg border border-border/80 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6"
           >
-            <div className="grid gap-5 md:grid-cols-2">
+            <section className="mb-6">
+              <h2 className="text-lg font-extrabold text-foreground">Kategori seç</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                İlan listede bu kategori altında gösterilir.
+              </p>
+              <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                {listingCategories.map((category) => {
+                  const active = formatCategoryPath(draft.categoryPath) === formatCategoryPath(category.path);
+                  return (
+                    <button
+                      key={category.id}
+                      type="button"
+                      onClick={() => {
+                        updateDraft("categoryPath", [...category.path]);
+                        updateDraft("propertyType", category.type);
+                      }}
+                      className={`rounded-lg border p-3 text-left transition ${
+                        active
+                          ? "border-primary bg-primary text-primary-foreground"
+                          : "border-border/80 bg-background text-foreground hover:border-primary/40"
+                      }`}
+                    >
+                      <Home className="h-4 w-4" />
+                      <span className="mt-2 block text-sm font-extrabold">{category.title}</span>
+                      <span className={`mt-1 block text-xs ${active ? "text-primary-foreground/75" : "text-muted-foreground"}`}>
+                        {formatCategoryPath(category.path)}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+
+            <div className="grid gap-5 border-t border-border/70 pt-6 md:grid-cols-2">
               <Field label="Ilan basligi" id="listing-title" className="md:col-span-2">
                 <Input
                   id="listing-title"
@@ -188,14 +245,45 @@ function PostListingPage() {
                 />
               </Field>
 
-              <Field label="Konaklama tipi" id="listing-type">
+              <Field label="İlan tipi" id="listing-type">
+                <Select value={draft.propertyType} onValueChange={(value) => updateDraft("propertyType", value)}>
+                  <SelectTrigger id="listing-type" className="h-11 rounded-md bg-background">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {listingCategories.map((category) => (
+                      <SelectItem key={category.id} value={category.type}>
+                        {category.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </Field>
+
+              <Field label="m²" id="listing-area">
                 <Input
-                  id="listing-type"
-                  value={draft.propertyType}
-                  onChange={(event) => updateDraft("propertyType", event.target.value)}
-                  placeholder="Villa, Yazlik, Chalet..."
+                  id="listing-area"
+                  type="number"
+                  min={1}
+                  value={draft.areaM2}
+                  onChange={(event) => updateDraft("areaM2", Number(event.target.value))}
                   className="h-11 rounded-md bg-background"
                 />
+              </Field>
+
+              <Field label="Oda sayısı" id="listing-room">
+                <Select value={draft.roomCount} onValueChange={(value) => updateDraft("roomCount", value)}>
+                  <SelectTrigger id="listing-room" className="h-11 rounded-md bg-background">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {roomOptions.map((item) => (
+                      <SelectItem key={item} value={item}>
+                        {item}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </Field>
 
               <Field label="Gecelik fiyat" id="listing-price">
@@ -209,6 +297,47 @@ function PostListingPage() {
                   }
                   className="h-11 rounded-md bg-background"
                 />
+              </Field>
+
+              <Field label="İlan veren tipi" id="listing-advertiser">
+                <Select value={draft.advertiserType} onValueChange={(value) => updateDraft("advertiserType", value)}>
+                  <SelectTrigger id="listing-advertiser" className="h-11 rounded-md bg-background">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {advertiserTypes.map((item) => (
+                      <SelectItem key={item} value={item}>
+                        {item}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </Field>
+
+              <Field label="İlan veren adı" id="listing-contact-name">
+                <div className="relative">
+                  <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
+                  <Input
+                    id="listing-contact-name"
+                    value={draft.contactName}
+                    onChange={(event) => updateDraft("contactName", event.target.value)}
+                    placeholder="Ad soyad"
+                    className="h-11 rounded-md bg-background pl-9"
+                  />
+                </div>
+              </Field>
+
+              <Field label="Telefon" id="listing-contact-phone">
+                <div className="relative">
+                  <Phone className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
+                  <Input
+                    id="listing-contact-phone"
+                    value={draft.contactPhone}
+                    onChange={(event) => updateDraft("contactPhone", event.target.value)}
+                    placeholder="+963 ..."
+                    className="h-11 rounded-md bg-background pl-9"
+                  />
+                </div>
               </Field>
 
               <div className="md:col-span-2">
@@ -271,15 +400,25 @@ function PostListingPage() {
                   checked={draft.hasSolarPower}
                   onCheckedChange={(value) => updateDraft("hasSolarPower", !!value)}
                 />
-                <Sun className="h-4 w-4 text-primary" /> Gunes enerjisi var
+                <Sun className="h-4 w-4 text-primary" /> Güneş enerjisi var
               </label>
               <label className="flex items-center gap-3 rounded-lg border border-border/80 bg-background p-4 text-sm font-semibold text-foreground">
                 <Checkbox
                   checked={draft.isConservativePrivate}
                   onCheckedChange={(value) => updateDraft("isConservativePrivate", !!value)}
                 />
-                <Shield className="h-4 w-4 text-primary" /> Aileye uygun / ozel
+                <Shield className="h-4 w-4 text-primary" /> Aileye uygun / özel
               </label>
+            </div>
+
+            <div className="mt-5 rounded-lg bg-muted/70 p-4 text-sm text-muted-foreground">
+              <p className="font-extrabold text-foreground">Özet</p>
+              <p className="mt-2 flex items-center gap-2">
+                <Home className="h-4 w-4 text-primary" /> {formatCategoryPath(draft.categoryPath)}
+              </p>
+              <p className="mt-1 flex items-center gap-2">
+                <Ruler className="h-4 w-4 text-primary" /> {draft.areaM2} m² · {draft.roomCount} · ${draft.pricePerNight} / gece
+              </p>
             </div>
 
             <Button

@@ -1,11 +1,19 @@
 export type Listing = {
   id: string;
+  category_path?: string[];
+  listing_no?: string;
   title: string;
   description: string;
   property_type: string;
   city: string;
   region: string;
   price_per_night: number;
+  area_m2?: number;
+  room_count?: string;
+  advertiser_type?: string;
+  contact_name?: string;
+  contact_phone?: string;
+  published_at?: string;
   image_url: string;
   gallery: string[];
   amenities: {
