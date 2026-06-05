@@ -50,7 +50,7 @@ type StoredAdSettings = {
 };
 
 export const defaultAdSettings: AdSettings = {
-  enabled: true,
+  enabled: false,
   slots: {
     top: {
       enabled: true,

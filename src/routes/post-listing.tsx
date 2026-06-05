@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, BadgeCheck, ImagePlus, MapPin, Send, Sun, Shield } from "lucide-react";
+import { ArrowLeft, ImagePlus, Send, Sun, Shield } from "lucide-react";
 import { useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 import { toast } from "sonner";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -144,7 +144,7 @@ function PostListingPage() {
           </div>
         </section>
 
-        <div className="mx-auto grid max-w-7xl gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[1fr_360px]">
+        <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6">
           <form
             onSubmit={onSubmit}
             className="rounded-lg border border-border/80 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6"
@@ -282,48 +282,6 @@ function PostListingPage() {
               <Send className="h-4 w-4" /> Ilani yayinla
             </Button>
           </form>
-
-          <aside className="h-fit rounded-lg border border-border/80 bg-card p-5 shadow-[var(--shadow-card)] lg:sticky lg:top-36">
-            <p className="flex items-center gap-2 text-sm font-semibold text-primary">
-              <BadgeCheck className="h-4 w-4" /> Onizleme
-            </p>
-            <div className="mt-4 overflow-hidden rounded-lg border border-border/80 bg-background">
-              <div className="relative aspect-[4/3] bg-muted">
-                {draft.imageUrl.trim() ? (
-                  <img
-                    src={draft.imageUrl}
-                    alt=""
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center text-muted-foreground">
-                    <ImagePlus className="h-8 w-8" />
-                  </div>
-                )}
-              </div>
-              <div className="p-4">
-                <p className="text-xs font-semibold text-primary">
-                  {draft.propertyType || "Villa"}
-                </p>
-                <h2 className="mt-1 line-clamp-2 text-base font-extrabold text-foreground">
-                  {draft.title || "Ilan basligi"}
-                </h2>
-                <p className="mt-2 flex items-center gap-1 text-sm text-muted-foreground">
-                  <MapPin className="h-3.5 w-3.5" />
-                  {draft.city || "Sehir"} / {draft.region || "Bolge"}
-                </p>
-                <p className="mt-3 line-clamp-3 text-sm leading-6 text-muted-foreground">
-                  {draft.description || "Ilan aciklamasi burada gorunur."}
-                </p>
-                <div className="mt-4 border-t border-border/70 pt-3">
-                  <span className="text-xl font-extrabold text-price">
-                    ${draft.pricePerNight || 0}
-                  </span>
-                  <span className="ml-1 text-xs text-muted-foreground">/ gece</span>
-                </div>
-              </div>
-            </div>
-          </aside>
         </div>
       </main>
       <SiteFooter />
