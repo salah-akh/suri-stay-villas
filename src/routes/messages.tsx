@@ -1,13 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { Inbox, MessageCircle, Send } from "lucide-react";
+import { z } from "zod";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
+import { useListingsCatalog } from "@/lib/listing-store";
+
+const searchSchema = z.object({
+  listing: z.string().optional(),
+});
 
 export const Route = createFileRoute("/messages")({
+  validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "Mesajlar - Hajezna" },
+      { title: "Mesajlar - Hajazna" },
       { name: "description", content: "Ilan mesajlarinizi takip edin." },
     ],
   }),
@@ -15,11 +23,16 @@ export const Route = createFileRoute("/messages")({
 });
 
 function MessagesPage() {
+  const search = Route.useSearch();
+  const { listings } = useListingsCatalog();
+  const selectedListing = listings.find((listing) => listing.id === search.listing);
+  const [messageSent, setMessageSent] = useState(false);
+
   return (
     <div className="flex min-h-screen flex-col bg-muted/40">
       <SiteHeader />
-      <main className="flex flex-1 items-center justify-center px-4 py-10">
-        <section className="w-full max-w-md rounded-lg border border-border/80 bg-card p-6 shadow-[var(--shadow-card)]">
+      <main className="flex flex-1 justify-center px-4 py-6 sm:py-10">
+        <section className="w-full max-w-md rounded-lg border border-border/80 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6">
           <span className="flex h-12 w-12 items-center justify-center rounded-md bg-primary/10 text-primary">
             <MessageCircle className="h-5 w-5" />
           </span>
@@ -27,6 +40,36 @@ function MessagesPage() {
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
             Gelen ve gonderilen ilan mesajlari burada gorunecek.
           </p>
+          {selectedListing && (
+            <div className="mt-5 rounded-lg border border-primary/20 bg-primary/5 p-4">
+              <p className="text-xs font-extrabold text-primary">Mesaj gonderilecek ilan</p>
+              <h2 className="mt-1 line-clamp-2 text-base font-extrabold text-foreground">
+                {selectedListing.title}
+              </h2>
+              <p className="mt-1 text-xs font-semibold text-muted-foreground">
+                {selectedListing.city} / {selectedListing.region}
+              </p>
+              <label className="mt-4 block">
+                <span className="mb-2 block text-xs font-extrabold text-muted-foreground">Mesajin</span>
+                <textarea
+                  defaultValue={`Merhaba, ${selectedListing.title} ilani hakkinda bilgi almak istiyorum.`}
+                  className="min-h-28 w-full rounded-md border border-border/80 bg-background p-3 text-sm font-medium text-foreground outline-none transition focus:border-primary"
+                />
+              </label>
+              <Button
+                type="button"
+                onClick={() => setMessageSent(true)}
+                className="mt-3 w-full bg-primary text-primary-foreground hover:bg-primary/90"
+              >
+                <Send className="h-4 w-4" /> Mesaji gonder
+              </Button>
+              {messageSent && (
+                <p className="mt-2 rounded-md bg-primary/10 px-3 py-2 text-xs font-bold text-primary">
+                  Mesaj taslak olarak gonderildi.
+                </p>
+              )}
+            </div>
+          )}
           <div className="mt-5 grid gap-3">
             <div className="rounded-md bg-muted/70 p-3">
               <p className="flex items-center gap-2 text-sm font-extrabold text-foreground">

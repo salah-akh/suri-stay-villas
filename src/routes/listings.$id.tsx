@@ -1,11 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
-import { ArrowLeft, CalendarDays, Camera, Check, Grid2X2, Hash, Home, MapPin, MessageCircle, Ruler, User } from "lucide-react";
+import { ArrowLeft, CalendarDays, Camera, Check, Grid2X2, Hash, Heart, Home, MapPin, MessageCircle, Ruler, User } from "lucide-react";
 import { AdSlot } from "@/components/AdSlot";
 import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { listings } from "@/data/listings";
+import { useFavoriteIds } from "@/lib/favorites-store";
 import {
   defaultAreaFromId,
   defaultDateFromId,
@@ -39,6 +40,7 @@ function ListingDetail() {
   const [userListings] = useUserListings();
   const listing = staticListing ?? userListings.find((item) => item.id === id);
   const [activeImg, setActiveImg] = useState(0);
+  const { isFavorite, toggleFavorite } = useFavoriteIds();
 
   if (!listing) {
     return (
@@ -68,6 +70,7 @@ function ListingDetail() {
   const advertiserType = listing.advertiser_type ?? "Ev sahibinden";
   const contactName = listing.contact_name ?? "Ev sahibi";
   const contactPhone = listing.contact_phone ?? "+963 11 000 0000";
+  const favoriteActive = isFavorite(listing.id);
   const amenities = [
     { ok: listing.amenities.has_solar_power, label: "Gunes enerjisi" },
     { ok: listing.amenities.is_conservative_private, label: "Aileye uygun / ozel alan" },
@@ -106,6 +109,12 @@ function ListingDetail() {
               <InfoPill icon={<Grid2X2 className="h-4 w-4" />} label="Oda" value={room} />
               <InfoPill icon={<CalendarDays className="h-4 w-4" />} label="Tarih" value={publishedAt} />
             </div>
+            <ListingActions
+              listingId={listing.id}
+              favoriteActive={favoriteActive}
+              onToggleFavorite={() => toggleFavorite(listing.id)}
+              className="mt-4"
+            />
           </section>
 
           <section className="mt-4 overflow-hidden rounded-lg border border-border/80 bg-card shadow-[var(--shadow-card)]">
@@ -180,7 +189,7 @@ function ListingDetail() {
               <p className="text-sm font-extrabold text-primary">Bu ilani kiralamak icin</p>
               <ol className="mt-3 space-y-2 text-sm leading-6 text-muted-foreground">
                 <li>1. Fotograf ve bilgileri kontrol et.</li>
-                <li>2. WhatsApp ile sor butonuna bas.</li>
+                <li>2. Mesaj gonder butonuna bas.</li>
                 <li>3. Musaitlik ve odemeyi ev sahibiyle netlestir.</li>
               </ol>
               <div className="mt-5 border-t border-border/70 pt-5">
@@ -194,6 +203,21 @@ function ListingDetail() {
                 <p className="mt-2 text-sm font-semibold text-primary">{contactPhone}</p>
               </div>
               <Button asChild size="lg" className="mt-5 w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                <Link to="/messages" search={{ listing: listing.id }}>
+                  <MessageCircle className="h-5 w-5" /> Mesaj gonder
+                </Link>
+              </Button>
+              <Button
+                type="button"
+                size="lg"
+                variant="outline"
+                onClick={() => toggleFavorite(listing.id)}
+                className="mt-3 w-full bg-background"
+              >
+                <Heart className={`h-5 w-5 ${favoriteActive ? "fill-primary text-primary" : ""}`} />
+                {favoriteActive ? "Favorilerden cikar" : "Favorilere ekle"}
+              </Button>
+              <Button asChild size="lg" variant="outline" className="mt-3 w-full bg-background">
                 <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">
                   <MessageCircle className="h-5 w-5" /> WhatsApp ile sor
                 </a>
@@ -207,6 +231,37 @@ function ListingDetail() {
         </div>
       </main>
       <SiteFooter />
+    </div>
+  );
+}
+
+function ListingActions({
+  listingId,
+  favoriteActive,
+  onToggleFavorite,
+  className = "",
+}: {
+  listingId: string;
+  favoriteActive: boolean;
+  onToggleFavorite: () => void;
+  className?: string;
+}) {
+  return (
+    <div className={`grid gap-2 sm:grid-cols-2 ${className}`}>
+      <Button
+        type="button"
+        variant={favoriteActive ? "default" : "outline"}
+        onClick={onToggleFavorite}
+        className={favoriteActive ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-background"}
+      >
+        <Heart className={`h-4 w-4 ${favoriteActive ? "fill-current" : ""}`} />
+        {favoriteActive ? "Favorilerde" : "Favorilere ekle"}
+      </Button>
+      <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90">
+        <Link to="/messages" search={{ listing: listingId }}>
+          <MessageCircle className="h-4 w-4" /> Mesaj gonder
+        </Link>
+      </Button>
     </div>
   );
 }
