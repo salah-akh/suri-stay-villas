@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, BadgeCheck, ImagePlus, MapPin, Send, Sun, Shield } from "lucide-react";
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 import { toast } from "sonner";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -27,6 +27,8 @@ const initialDraft: ListingDraft = {
   isConservativePrivate: false,
 };
 
+const maxImageSizeBytes = 2 * 1024 * 1024;
+
 export const Route = createFileRoute("/post-listing")({
   head: () => ({
     meta: [
@@ -44,12 +46,44 @@ function PostListingPage() {
   const navigate = Route.useNavigate();
   const { addUserListing } = useListingsCatalog();
   const [draft, setDraft] = useState<ListingDraft>(initialDraft);
+  const [imageName, setImageName] = useState("");
 
   const updateDraft = <Field extends keyof ListingDraft>(
     field: Field,
     value: ListingDraft[Field],
   ) => {
     setDraft((current) => ({ ...current, [field]: value }));
+  };
+
+  const onImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Lutfen bir fotograf dosyasi secin.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > maxImageSizeBytes) {
+      toast.error("Fotograf en fazla 2 MB olabilir.");
+      event.target.value = "";
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result !== "string") {
+        toast.error("Fotograf okunamadi.");
+        return;
+      }
+
+      updateDraft("imageUrl", reader.result);
+      setImageName(file.name);
+      toast.success("Fotograf yuklendi.");
+    };
+    reader.onerror = () => toast.error("Fotograf okunamadi.");
+    reader.readAsDataURL(file);
   };
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -72,6 +106,11 @@ function PostListingPage() {
 
     if (!Number.isFinite(draft.pricePerNight) || draft.pricePerNight <= 0) {
       toast.error("Gecerli bir gecelik fiyat yazin.");
+      return;
+    }
+
+    if (!draft.imageUrl.trim()) {
+      toast.error("Kapak fotografi yukleyin.");
       return;
     }
 
@@ -164,15 +203,47 @@ function PostListingPage() {
                 />
               </Field>
 
-              <Field label="Kapak gorseli URL" id="listing-image" className="md:col-span-2">
-                <Input
-                  id="listing-image"
-                  value={draft.imageUrl}
-                  onChange={(event) => updateDraft("imageUrl", event.target.value)}
-                  placeholder="https://..."
-                  className="h-11 rounded-md bg-background"
-                />
-              </Field>
+              <div className="md:col-span-2">
+                <Label htmlFor="listing-image" className="mb-2 block text-sm font-semibold text-foreground">
+                  Kapak fotografi
+                </Label>
+                <label
+                  htmlFor="listing-image"
+                  className="flex min-h-44 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border border-dashed border-primary/35 bg-primary/5 p-4 text-center transition hover:border-primary hover:bg-primary/10"
+                >
+                  {draft.imageUrl.trim() ? (
+                    <img
+                      src={draft.imageUrl}
+                      alt=""
+                      className="h-44 w-full rounded-md object-cover"
+                    />
+                  ) : (
+                    <>
+                      <span className="flex h-12 w-12 items-center justify-center rounded-md bg-primary/10 text-primary">
+                        <ImagePlus className="h-6 w-6" />
+                      </span>
+                      <span className="mt-3 text-sm font-extrabold text-foreground">
+                        Fotograf yukle
+                      </span>
+                      <span className="mt-1 text-xs leading-5 text-muted-foreground">
+                        JPG, PNG veya WebP. En fazla 2 MB.
+                      </span>
+                    </>
+                  )}
+                  <input
+                    id="listing-image"
+                    type="file"
+                    accept="image/*"
+                    onChange={onImageChange}
+                    className="sr-only"
+                  />
+                </label>
+                {imageName && (
+                  <p className="mt-2 text-xs font-semibold text-muted-foreground">
+                    Secilen fotograf: {imageName}
+                  </p>
+                )}
+              </div>
 
               <Field label="Aciklama" id="listing-description" className="md:col-span-2">
                 <Textarea
