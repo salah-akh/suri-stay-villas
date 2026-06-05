@@ -14,7 +14,7 @@ const links = [
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const { lang, setLang, t } = useLanguage();
-  const toggle = () => setLang(lang === "tr" ? "ar" : "tr");
+  const cycle = () => setLang(lang === "tr" ? "ar" : lang === "ar" ? "en" : "tr");
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-card">
       {/* Top utility bar */}
@@ -62,12 +62,12 @@ export function SiteHeader() {
 
         <div className="ml-auto flex items-center gap-1 md:hidden">
           <button
-            onClick={toggle}
+            onClick={cycle}
             className="flex items-center gap-1 rounded-sm border border-border px-2 py-1 text-xs font-semibold"
             aria-label="Language"
           >
             <Globe className="h-3.5 w-3.5" />
-            {lang === "tr" ? "TR" : "AR"}
+            {lang.toUpperCase()}
           </button>
           <button onClick={() => setOpen(!open)} aria-label="Menu" className="p-1">
             {open ? <X /> : <Menu />}
@@ -111,6 +111,13 @@ function LangSwitcher({ lang, setLang }: { lang: Lang; setLang: (l: Lang) => voi
         className={`px-1 font-semibold ${lang === "ar" ? "text-link" : "hover:text-link"}`}
       >
         AR
+      </button>
+      <span className="text-muted-foreground/60">/</span>
+      <button
+        onClick={() => setLang("en")}
+        className={`px-1 font-semibold ${lang === "en" ? "text-link" : "hover:text-link"}`}
+      >
+        EN
       </button>
     </div>
   );
