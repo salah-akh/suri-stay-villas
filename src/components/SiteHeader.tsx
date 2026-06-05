@@ -6,8 +6,7 @@ import { AppBottomNav } from "@/components/AppBottomNav";
 import { Button } from "@/components/ui/button";
 
 const links = [
-  { to: "/", label: "Ana" },
-  { to: "/listings", label: "Ilanlar" },
+  { to: "/", label: "Villa ara" },
   { to: "/contact", label: "Destek" },
 ] as const;
 

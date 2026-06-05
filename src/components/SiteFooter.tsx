@@ -9,8 +9,8 @@ export function SiteFooter() {
           <p className="mt-1 text-muted-foreground">Sade villa ve yazlik kiralama uygulamasi.</p>
         </div>
         <nav className="flex flex-wrap items-center gap-4 font-semibold text-muted-foreground">
-          <Link to="/listings" className="transition hover:text-primary">
-            Ilanlar
+          <Link to="/" className="transition hover:text-primary">
+            Villa ara
           </Link>
           <Link to="/post-listing" className="transition hover:text-primary">
             Ilan ver
