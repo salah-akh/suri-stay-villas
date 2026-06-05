@@ -1,15 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { z } from "zod";
-import { Sun, Shield, SlidersHorizontal, ChevronRight, X } from "lucide-react";
+import { ArrowUpDown, ChevronRight, MapPin, Shield, SlidersHorizontal, Sun, X } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { PropertyRow } from "@/components/PropertyCard";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Slider } from "@/components/ui/slider";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { listings, cities, propertyTypes } from "@/data/listings";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { cities, listings, propertyTypes } from "@/data/listings";
 
 const searchSchema = z.object({
   city: z.string().optional(),
@@ -20,9 +20,12 @@ export const Route = createFileRoute("/listings")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "All Villas — Hajazna" },
-      { name: "description", content: "Browse premium villas and vacation rentals across Syria. Filter by city, price, and amenities." },
-      { property: "og:title", content: "All Villas — Hajazna" },
+      { title: "All Villas - Hajazna" },
+      {
+        name: "description",
+        content: "Browse premium villas and vacation rentals across Syria. Filter by city, price, and amenities.",
+      },
+      { property: "og:title", content: "All Villas - Hajazna" },
     ],
   }),
   component: ListingsPage,
@@ -39,63 +42,91 @@ function ListingsPage() {
   const [sort, setSort] = useState("featured");
 
   const filtered = useMemo(() => {
-    let r = listings.filter((l) =>
-    (city === "all" || l.city === city) &&
-    (type === "all" || l.property_type === type) &&
-    l.price_per_night <= price[0] &&
-    (!solar || l.amenities.has_solar_power) &&
-    (!privateOnly || l.amenities.is_conservative_private)
+    let results = listings.filter(
+      (listing) =>
+        (city === "all" || listing.city === city) &&
+        (type === "all" || listing.property_type === type) &&
+        listing.price_per_night <= price[0] &&
+        (!solar || listing.amenities.has_solar_power) &&
+        (!privateOnly || listing.amenities.is_conservative_private),
     );
-    if (sort === "price-asc") r = [...r].sort((a, b) => a.price_per_night - b.price_per_night);
-    if (sort === "price-desc") r = [...r].sort((a, b) => b.price_per_night - a.price_per_night);
-    return r;
+
+    if (sort === "price-asc") results = [...results].sort((a, b) => a.price_per_night - b.price_per_night);
+    if (sort === "price-desc") results = [...results].sort((a, b) => b.price_per_night - a.price_per_night);
+    return results;
   }, [city, type, price, solar, privateOnly, sort]);
+
+  const clearFilters = () => {
+    setCity("all");
+    setType("all");
+    setPrice([300]);
+    setSolar(false);
+    setPrivateOnly(false);
+  };
 
   const Filters = (
     <div className="space-y-5">
       <div>
-        <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">City</label>
+        <label className="mb-2 block text-sm font-semibold text-foreground">City</label>
         <Select value={city} onValueChange={setCity}>
-          <SelectTrigger className="h-9 rounded-sm"><SelectValue /></SelectTrigger>
+          <SelectTrigger className="h-10 rounded-md bg-background">
+            <SelectValue />
+          </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All cities</SelectItem>
-            {cities.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+            {cities.map((item) => (
+              <SelectItem key={item} value={item}>
+                {item}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
+
       <div>
-        <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Property Type</label>
+        <label className="mb-2 block text-sm font-semibold text-foreground">Property type</label>
         <Select value={type} onValueChange={setType}>
-          <SelectTrigger className="h-9 rounded-sm"><SelectValue /></SelectTrigger>
+          <SelectTrigger className="h-10 rounded-md bg-background">
+            <SelectValue />
+          </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All types</SelectItem>
-            {propertyTypes.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
+            {propertyTypes.map((item) => (
+              <SelectItem key={item} value={item}>
+                {item}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
+
       <div>
-        <div className="mb-2 flex items-center justify-between">
-          <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Max Price / night</label>
-          <span className="text-sm font-bold text-price">${price[0]}</span>
+        <div className="mb-3 flex items-center justify-between">
+          <label className="text-sm font-semibold text-foreground">Max price</label>
+          <span className="rounded-md bg-primary/10 px-2 py-1 text-sm font-extrabold text-primary">
+            ${price[0]}
+          </span>
         </div>
         <Slider value={price} onValueChange={setPrice} min={50} max={300} step={10} />
       </div>
-      <div className="space-y-2.5 border-t border-border pt-4">
-        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Amenities</p>
+
+      <div className="space-y-3 border-t border-border/70 pt-5">
+        <p className="text-sm font-semibold text-foreground">Amenities</p>
         <label className="flex items-center gap-2 text-sm text-foreground">
-          <Checkbox checked={solar} onCheckedChange={(v) => setSolar(!!v)} />
-          <Sun className="h-3.5 w-3.5 text-muted-foreground" /> Solar power
+          <Checkbox checked={solar} onCheckedChange={(value) => setSolar(!!value)} />
+          <Sun className="h-4 w-4 text-primary" /> Solar power
         </label>
         <label className="flex items-center gap-2 text-sm text-foreground">
-          <Checkbox checked={privateOnly} onCheckedChange={(v) => setPrivateOnly(!!v)} />
-          <Shield className="h-3.5 w-3.5 text-muted-foreground" /> Conservative / Private
+          <Checkbox checked={privateOnly} onCheckedChange={(value) => setPrivateOnly(!!value)} />
+          <Shield className="h-4 w-4 text-primary" /> Conservative / Private
         </label>
       </div>
+
       <button
-        onClick={() => { setCity("all"); setType("all"); setPrice([300]); setSolar(false); setPrivateOnly(false); }}
-        className="flex items-center gap-1 text-xs font-semibold text-link hover:underline"
+        onClick={clearFilters}
+        className="flex items-center gap-1.5 text-sm font-bold text-link transition hover:text-primary"
       >
-        <X className="h-3 w-3" /> Clear filters
+        <X className="h-4 w-4" /> Clear filters
       </button>
     </div>
   );
@@ -103,44 +134,69 @@ function ListingsPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <SiteHeader />
-      <main className="flex-1">
-        {/* Breadcrumb */}
-        <div className="border-b border-border bg-card">
-          <div className="mx-auto flex max-w-7xl items-center gap-1 px-4 py-2 text-xs text-muted-foreground sm:px-6">
-            <Link to="/" className="hover:text-link">Home</Link>
-            <ChevronRight className="h-3 w-3" />
-            <span className="text-foreground">Villas in Syria</span>
-            {city !== "all" && (<>
-              <ChevronRight className="h-3 w-3" />
-              <span className="text-foreground">{city}</span>
-            </>)}
+      <main className="flex-1 bg-muted/40">
+        <section className="border-b border-border/70 bg-card">
+          <div className="mx-auto max-w-7xl px-4 py-7 sm:px-6">
+            <div className="flex flex-wrap items-center gap-1 text-sm text-muted-foreground">
+              <Link to="/" className="hover:text-link">
+                Home
+              </Link>
+              <ChevronRight className="h-4 w-4" />
+              <span className="text-foreground">Villas in Syria</span>
+              {city !== "all" && (
+                <>
+                  <ChevronRight className="h-4 w-4" />
+                  <span className="text-foreground">{city}</span>
+                </>
+              )}
+            </div>
+            <div className="mt-5 flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <p className="flex items-center gap-2 text-sm font-semibold text-primary">
+                  <MapPin className="h-4 w-4" /> Curated destinations
+                </p>
+                <h1 className="mt-2 text-3xl font-extrabold text-foreground sm:text-4xl">
+                  Find your next private stay
+                </h1>
+              </div>
+              <div className="rounded-lg border border-border/80 bg-background px-4 py-3 text-sm text-muted-foreground">
+                <span className="font-extrabold text-foreground">{filtered.length}</span> stays available
+              </div>
+            </div>
           </div>
-        </div>
+        </section>
 
-        <div className="mx-auto max-w-7xl px-3 py-4 sm:px-6">
-          <div className="grid gap-4 lg:grid-cols-[240px_1fr]">
-            {/* Sidebar filters */}
-            <aside className={`${showFilters ? "block" : "hidden"} h-fit rounded-sm border border-border bg-card p-4 lg:sticky lg:top-24 lg:block`}>
-              <h2 className="mb-3 border-b border-border pb-2 text-sm font-bold uppercase tracking-wide text-foreground">Filters</h2>
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+          <div className="grid gap-5 lg:grid-cols-[280px_1fr]">
+            <aside
+              className={`${showFilters ? "block" : "hidden"} h-fit rounded-lg border border-border/80 bg-card p-5 shadow-[var(--shadow-card)] lg:sticky lg:top-24 lg:block`}
+            >
+              <h2 className="mb-5 text-base font-extrabold text-foreground">Filters</h2>
               {Filters}
             </aside>
 
             <div className="min-w-0">
-              {/* Toolbar */}
-              <div className="mb-2 flex flex-wrap items-center justify-between gap-2 rounded-sm border border-border bg-card px-3 py-2">
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border/80 bg-card p-3 shadow-[var(--shadow-card)]">
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" onClick={() => setShowFilters(!showFilters)} className="h-8 gap-1.5 rounded-sm lg:hidden">
-                    <SlidersHorizontal className="h-3.5 w-3.5" /> Filters
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowFilters(!showFilters)}
+                    className="h-9 lg:hidden"
+                  >
+                    <SlidersHorizontal className="h-4 w-4" /> Filters
                   </Button>
-                  <span className="text-sm">
-                    <span className="font-bold text-foreground">{filtered.length}</span>
-                    <span className="text-muted-foreground"> results</span>
+                  <span className="text-sm text-muted-foreground">
+                    Showing <span className="font-bold text-foreground">{filtered.length}</span> villas
                   </span>
                 </div>
+
                 <div className="flex items-center gap-2">
-                  <label className="text-xs text-muted-foreground">Sort by</label>
+                  <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
                   <Select value={sort} onValueChange={setSort}>
-                    <SelectTrigger className="h-8 w-44 rounded-sm text-xs"><SelectValue /></SelectTrigger>
+                    <SelectTrigger className="h-9 w-44 rounded-md bg-background text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="featured">Featured</SelectItem>
                       <SelectItem value="price-asc">Price: low to high</SelectItem>
@@ -150,14 +206,19 @@ function ListingsPage() {
                 </div>
               </div>
 
-              {/* Results list */}
               {filtered.length === 0 ? (
-                <div className="rounded-sm border border-border bg-card p-10 text-center text-sm text-muted-foreground">
-                  No properties match your filters.
+                <div className="rounded-lg border border-border/80 bg-card p-10 text-center shadow-[var(--shadow-card)]">
+                  <h2 className="text-lg font-bold text-foreground">No stays match these filters</h2>
+                  <p className="mt-2 text-sm text-muted-foreground">Try another city, property type, or price range.</p>
+                  <Button onClick={clearFilters} className="mt-5 bg-primary text-primary-foreground hover:bg-primary/90">
+                    Clear filters
+                  </Button>
                 </div>
               ) : (
-                <div className="overflow-hidden rounded-sm border border-border bg-card">
-                  {filtered.map((l) => <PropertyRow key={l.id} listing={l} />)}
+                <div className="space-y-3">
+                  {filtered.map((listing) => (
+                    <PropertyRow key={listing.id} listing={listing} />
+                  ))}
                 </div>
               )}
             </div>

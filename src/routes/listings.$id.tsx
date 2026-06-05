@@ -1,33 +1,37 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
-import { MapPin, Sun, Shield, ArrowLeft, MessageCircle } from "lucide-react";
-import { SiteHeader } from "@/components/SiteHeader";
-import { SiteFooter } from "@/components/SiteFooter";
+import { ArrowLeft, CalendarDays, Check, MapPin, MessageCircle, Shield, Sun } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { SiteFooter } from "@/components/SiteFooter";
+import { SiteHeader } from "@/components/SiteHeader";
 import { listings } from "@/data/listings";
 
 export const Route = createFileRoute("/listings/$id")({
   loader: ({ params }) => {
-    const listing = listings.find((l) => l.id === params.id);
+    const listing = listings.find((item) => item.id === params.id);
     if (!listing) throw notFound();
     return { listing };
   },
   head: ({ loaderData }) => ({
-    meta: loaderData ? [
-      { title: `${loaderData.listing.title} — Hajazna` },
-      { name: "description", content: loaderData.listing.description },
-      { property: "og:title", content: loaderData.listing.title },
-      { property: "og:description", content: loaderData.listing.description },
-      { property: "og:image", content: loaderData.listing.image_url },
-    ] : [],
+    meta: loaderData
+      ? [
+          { title: `${loaderData.listing.title} - Hajazna` },
+          { name: "description", content: loaderData.listing.description },
+          { property: "og:title", content: loaderData.listing.title },
+          { property: "og:description", content: loaderData.listing.description },
+          { property: "og:image", content: loaderData.listing.image_url },
+        ]
+      : [],
   }),
   notFoundComponent: () => (
-    <div className="flex min-h-screen items-center justify-center">
+    <div className="flex min-h-screen items-center justify-center bg-background">
       <div className="text-center">
-        <h1 className="font-display text-3xl">Listing not found</h1>
-        <Link to="/listings" className="mt-4 inline-block text-primary hover:underline">Back to villas</Link>
+        <h1 className="text-3xl font-extrabold text-foreground">Listing not found</h1>
+        <Link to="/listings" className="mt-4 inline-block text-primary hover:underline">
+          Back to villas
+        </Link>
       </div>
     </div>
   ),
@@ -41,92 +45,146 @@ function ListingDetail() {
   const [checkOut, setCheckOut] = useState("");
 
   const whatsappUrl = () => {
-    const msg = `Hello Hajazna! I want to book ${listing.title} in ${listing.region} from ${checkIn || "[Check-In]"} to ${checkOut || "[Check-Out]"}.`;
+    const msg = `Hello Hajazna! I want to book ${listing.title} in ${listing.region} from ${
+      checkIn || "[Check-In]"
+    } to ${checkOut || "[Check-Out]"}.`;
     return `https://wa.me/963000000000?text=${encodeURIComponent(msg)}`;
   };
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-background">
       <SiteHeader />
       <main className="flex-1">
-        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-          <Link to="/listings" className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary">
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8">
+          <Link
+            to="/listings"
+            className="mb-5 inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground transition hover:text-primary"
+          >
             <ArrowLeft className="h-4 w-4" /> All villas
           </Link>
 
-          {/* Gallery */}
-          <div className="grid gap-3 sm:grid-cols-4">
-            <div className="overflow-hidden rounded-2xl sm:col-span-3">
-              <img src={listing.gallery[activeImg]} alt={listing.title} className="aspect-[16/10] w-full object-cover" />
+          <section className="grid gap-3 lg:grid-cols-[1fr_280px]">
+            <div className="relative overflow-hidden rounded-lg bg-muted shadow-[var(--shadow-card)]">
+              <img
+                src={listing.gallery[activeImg]}
+                alt={listing.title}
+                className="aspect-[16/9] w-full object-cover"
+              />
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-secondary/80 to-transparent p-5 text-white">
+                <p className="flex items-center gap-2 text-sm font-semibold text-white/85">
+                  <MapPin className="h-4 w-4" /> {listing.region}, {listing.city}
+                </p>
+                <h1 className="mt-2 max-w-3xl text-2xl font-extrabold sm:text-4xl">{listing.title}</h1>
+              </div>
             </div>
-            <div className="flex gap-3 sm:flex-col">
-              {listing.gallery.map((g: string, i: number) => (
-                <button key={i} onClick={() => setActiveImg(i)} className={`flex-1 overflow-hidden rounded-xl border-2 transition ${activeImg === i ? "border-primary" : "border-transparent"}`}>
-                  <img src={g} alt="" className="aspect-square w-full object-cover" />
+
+            <div className="grid grid-cols-3 gap-3 lg:grid-cols-1">
+              {listing.gallery.map((image, index) => (
+                <button
+                  key={image}
+                  onClick={() => setActiveImg(index)}
+                  className={`overflow-hidden rounded-lg border-2 bg-muted transition ${
+                    activeImg === index ? "border-primary" : "border-transparent hover:border-primary/40"
+                  }`}
+                >
+                  <img src={image} alt="" className="aspect-[4/3] w-full object-cover" />
                 </button>
               ))}
             </div>
-          </div>
+          </section>
 
-          {/* Content */}
-          <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_380px]">
-            <div>
-              <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                <MapPin className="h-4 w-4" /> {listing.region}, {listing.city}
+          <section className="mt-8 grid gap-8 lg:grid-cols-[1fr_380px]">
+            <div className="min-w-0">
+              <div className="flex flex-wrap gap-2">
+                <Badge className="bg-primary text-primary-foreground">{listing.property_type}</Badge>
+                {listing.amenities.has_solar_power && (
+                  <Badge variant="outline" className="gap-1 border-border/80 bg-card">
+                    <Sun className="h-3.5 w-3.5 text-primary" /> Solar power
+                  </Badge>
+                )}
+                {listing.amenities.is_conservative_private && (
+                  <Badge variant="outline" className="gap-1 border-border/80 bg-card">
+                    <Shield className="h-3.5 w-3.5 text-primary" /> Private
+                  </Badge>
+                )}
               </div>
-              <h1 className="mt-2 font-display text-3xl font-bold sm:text-4xl">{listing.title}</h1>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <Badge variant="secondary">{listing.property_type}</Badge>
-                {listing.amenities.has_solar_power && <Badge variant="outline" className="gap-1"><Sun className="h-3 w-3" />Solar Power</Badge>}
-                {listing.amenities.is_conservative_private && <Badge variant="outline" className="gap-1"><Shield className="h-3 w-3" />Conservative / Private</Badge>}
+
+              <div className="mt-8 rounded-lg border border-border/80 bg-card p-6 shadow-[var(--shadow-card)]">
+                <h2 className="text-2xl font-extrabold text-foreground">About this villa</h2>
+                <p className="mt-3 text-base leading-7 text-muted-foreground">{listing.description}</p>
               </div>
-              <div className="mt-8 border-t border-border/60 pt-8">
-                <h2 className="font-display text-2xl font-semibold">About this villa</h2>
-                <p className="mt-3 leading-relaxed text-muted-foreground">{listing.description}</p>
-              </div>
-              <div className="mt-8 border-t border-border/60 pt-8">
-                <h2 className="font-display text-2xl font-semibold">Amenities & features</h2>
-                <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+
+              <div className="mt-5 rounded-lg border border-border/80 bg-card p-6 shadow-[var(--shadow-card)]">
+                <h2 className="text-2xl font-extrabold text-foreground">Amenities and features</h2>
+                <ul className="mt-5 grid gap-3 sm:grid-cols-2">
                   {[
-                    { ok: listing.amenities.has_solar_power, l: "Solar power system" },
-                    { ok: listing.amenities.is_conservative_private, l: "Fully private property" },
-                    { ok: true, l: "Fully furnished" },
-                    { ok: true, l: "WiFi included" },
-                    { ok: true, l: "Kitchen access" },
-                    { ok: true, l: "Parking on-site" },
-                  ].map((a) => (
-                    <li key={a.l} className={`flex items-center gap-2 text-sm ${a.ok ? "" : "text-muted-foreground line-through"}`}>
-                      <span className="h-1.5 w-1.5 rounded-full bg-primary" /> {a.l}
+                    { ok: listing.amenities.has_solar_power, label: "Solar power system" },
+                    { ok: listing.amenities.is_conservative_private, label: "Fully private property" },
+                    { ok: true, label: "Fully furnished" },
+                    { ok: true, label: "WiFi included" },
+                    { ok: true, label: "Kitchen access" },
+                    { ok: true, label: "Parking on-site" },
+                  ].map((amenity) => (
+                    <li
+                      key={amenity.label}
+                      className={`flex items-center gap-2 text-sm ${
+                        amenity.ok ? "text-foreground" : "text-muted-foreground line-through"
+                      }`}
+                    >
+                      <span className="flex h-5 w-5 items-center justify-center rounded-md bg-primary/10 text-primary">
+                        <Check className="h-3.5 w-3.5" />
+                      </span>
+                      {amenity.label}
                     </li>
                   ))}
                 </ul>
               </div>
             </div>
 
-            {/* Booking */}
-            <aside className="h-fit rounded-2xl border border-border/60 bg-card p-6 shadow-[var(--shadow-elegant)] lg:sticky lg:top-24">
-              <div className="flex items-baseline gap-1">
-                <span className="font-display text-3xl font-bold">${listing.price_per_night}</span>
-                <span className="text-sm text-muted-foreground">/ night</span>
+            <aside className="h-fit rounded-lg border border-border/80 bg-card p-5 shadow-[var(--shadow-elegant)] lg:sticky lg:top-24">
+              <div className="rounded-lg bg-muted/70 p-4">
+                <div className="flex items-end gap-1">
+                  <span className="text-3xl font-extrabold text-foreground">${listing.price_per_night}</span>
+                  <span className="pb-1 text-sm text-muted-foreground">/ night</span>
+                </div>
+                <p className="mt-1 text-sm text-muted-foreground">Confirm dates with the Hajazna team.</p>
               </div>
+
               <div className="mt-5 grid gap-3">
-                <div>
-                  <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-muted-foreground">Check-in</label>
-                  <Input type="date" value={checkIn} onChange={(e) => setCheckIn(e.target.value)} />
-                </div>
-                <div>
-                  <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-muted-foreground">Check-out</label>
-                  <Input type="date" value={checkOut} onChange={(e) => setCheckOut(e.target.value)} />
-                </div>
+                <label className="block">
+                  <span className="mb-2 flex items-center gap-2 text-sm font-semibold text-foreground">
+                    <CalendarDays className="h-4 w-4 text-primary" /> Check-in
+                  </span>
+                  <Input
+                    type="date"
+                    value={checkIn}
+                    onChange={(event) => setCheckIn(event.target.value)}
+                    className="h-11 rounded-md bg-background"
+                  />
+                </label>
+                <label className="block">
+                  <span className="mb-2 flex items-center gap-2 text-sm font-semibold text-foreground">
+                    <CalendarDays className="h-4 w-4 text-primary" /> Check-out
+                  </span>
+                  <Input
+                    type="date"
+                    value={checkOut}
+                    onChange={(event) => setCheckOut(event.target.value)}
+                    className="h-11 rounded-md bg-background"
+                  />
+                </label>
               </div>
-              <Button asChild size="lg" className="mt-5 w-full gap-2 rounded-xl bg-[oklch(0.62_0.16_155)] text-white hover:bg-[oklch(0.55_0.16_155)]">
+
+              <Button asChild size="lg" className="mt-5 w-full bg-price text-white hover:bg-price/90">
                 <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">
                   <MessageCircle className="h-5 w-5" /> Book via WhatsApp
                 </a>
               </Button>
-              <p className="mt-3 text-center text-xs text-muted-foreground">You'll be redirected to WhatsApp to complete your booking with our team.</p>
+              <p className="mt-3 text-center text-xs leading-5 text-muted-foreground">
+                You will be redirected to WhatsApp to finish the booking with our team.
+              </p>
             </aside>
-          </div>
+          </section>
         </div>
       </main>
       <SiteFooter />
