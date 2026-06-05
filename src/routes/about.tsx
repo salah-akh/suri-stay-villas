@@ -57,7 +57,7 @@ function About() {
               <h2 className="mt-4 font-display text-2xl font-semibold">Contact Information</h2>
               <p className="mt-3 leading-relaxed text-muted-foreground">
                 WhatsApp: +963 11 000 0000<br />
-                Email: hello@suristay.com<br />
+                Email: hello@hajazna.com<br />
                 Office: Damascus, Syria
               </p>
             </div>
