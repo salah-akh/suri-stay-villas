@@ -13,7 +13,9 @@ import { Route as ListingsRouteImport } from './routes/listings'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AccountRouteImport } from './routes/account'
 import { Route as FavoritesRouteImport } from './routes/favorites'
+import { Route as MessagesRouteImport } from './routes/messages'
 import { Route as PostListingRouteImport } from './routes/post-listing'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ListingsIdRouteImport } from './routes/listings.$id'
@@ -38,9 +40,19 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FavoritesRoute = FavoritesRouteImport.update({
   id: '/favorites',
   path: '/favorites',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MessagesRoute = MessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PostListingRoute = PostListingRouteImport.update({
@@ -64,7 +76,9 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/account': typeof AccountRoute
   '/favorites': typeof FavoritesRoute
+  '/messages': typeof MessagesRoute
   '/post-listing': typeof PostListingRoute
   '/listings': typeof ListingsRouteWithChildren
   '/listings/$id': typeof ListingsIdRoute
@@ -74,7 +88,9 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/account': typeof AccountRoute
   '/favorites': typeof FavoritesRoute
+  '/messages': typeof MessagesRoute
   '/post-listing': typeof PostListingRoute
   '/listings': typeof ListingsRouteWithChildren
   '/listings/$id': typeof ListingsIdRoute
@@ -85,17 +101,19 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/account': typeof AccountRoute
   '/favorites': typeof FavoritesRoute
+  '/messages': typeof MessagesRoute
   '/post-listing': typeof PostListingRoute
   '/listings': typeof ListingsRouteWithChildren
   '/listings/$id': typeof ListingsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/about' | '/contact' | '/favorites' | '/post-listing' | '/listings' | '/listings/$id'
+  fullPaths: '/' | '/admin' | '/about' | '/contact' | '/account' | '/favorites' | '/messages' | '/post-listing' | '/listings' | '/listings/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/about' | '/contact' | '/favorites' | '/post-listing' | '/listings' | '/listings/$id'
-  id: '__root__' | '/' | '/admin' | '/about' | '/contact' | '/favorites' | '/post-listing' | '/listings' | '/listings/$id'
+  to: '/' | '/admin' | '/about' | '/contact' | '/account' | '/favorites' | '/messages' | '/post-listing' | '/listings' | '/listings/$id'
+  id: '__root__' | '/' | '/admin' | '/about' | '/contact' | '/account' | '/favorites' | '/messages' | '/post-listing' | '/listings' | '/listings/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -103,7 +121,9 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
+  AccountRoute: typeof AccountRoute
   FavoritesRoute: typeof FavoritesRoute
+  MessagesRoute: typeof MessagesRoute
   PostListingRoute: typeof PostListingRoute
   ListingsRoute: typeof ListingsRouteWithChildren
 }
@@ -138,11 +158,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/favorites': {
       id: '/favorites'
       path: '/favorites'
       fullPath: '/favorites'
       preLoaderRoute: typeof FavoritesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/messages': {
+      id: '/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof MessagesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/post-listing': {
@@ -186,7 +220,9 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
+  AccountRoute: AccountRoute,
   FavoritesRoute: FavoritesRoute,
+  MessagesRoute: MessagesRoute,
   PostListingRoute: PostListingRoute,
   ListingsRoute: ListingsRouteWithChildren,
 }

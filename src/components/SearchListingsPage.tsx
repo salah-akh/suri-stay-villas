@@ -223,20 +223,29 @@ export function SearchListingsPage({
 
           <div className="min-w-0">
             <div className="lg:hidden">
-              <OptionGroup title="Kategoriler">
-                <FilterChip label="Tum ilanlar" active={category === "all"} onClick={() => setCategory("all")} />
-                {listingCategories.map((item) => (
-                  <FilterChip
-                    key={item.id}
-                    label={item.title}
-                    active={category === item.id}
-                    onClick={() => {
-                      setCategory(item.id);
-                      setType("all");
-                    }}
+              <div className="rounded-lg border border-border/80 bg-card p-4 shadow-[var(--shadow-card)]">
+                <SidebarTitle icon={<Home className="h-4 w-4" />} title="Kategoriler" />
+                <div className="mt-3 space-y-1">
+                  <SidebarButton
+                    active={category === "all"}
+                    label="Tum Villa & Yazlik"
+                    count={listings.length}
+                    onClick={() => setCategory("all")}
                   />
-                ))}
-              </OptionGroup>
+                  {listingCategories.map((item) => (
+                    <SidebarButton
+                      key={item.id}
+                      label={item.title}
+                      active={category === item.id}
+                      count={countForCategory(item.type, item.id, item.title)}
+                      onClick={() => {
+                        setCategory(item.id);
+                        setType("all");
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
 
               <div className="mt-4 space-y-4">
                 <OptionGroup title="Sehir">

@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Heart, Home, MessageCircle, Plus, Search } from "lucide-react";
+import { Heart, Home, MessageCircle, Plus, User } from "lucide-react";
 
 const navItemClass =
   "flex min-h-12 flex-col items-center justify-center gap-1 rounded-md text-[11px] font-bold text-muted-foreground";
@@ -17,15 +17,15 @@ export function AppBottomNav() {
           activeProps={{ className: activeNavItemClass }}
         >
           <Home className="h-4 w-4" />
-          Ana
+          Anasayfa
         </Link>
         <Link
-          to="/listings"
+          to="/messages"
           className={navItemClass}
           activeProps={{ className: activeNavItemClass }}
         >
-          <Search className="h-4 w-4" />
-          Ara
+          <MessageCircle className="h-4 w-4" />
+          Mesajlar
         </Link>
         <Link
           to="/post-listing"
@@ -46,15 +46,15 @@ export function AppBottomNav() {
           activeProps={{ className: activeNavItemClass }}
         >
           <Heart className="h-4 w-4" />
-          Favori
+          Favoriler
         </Link>
         <Link
-          to="/contact"
+          to="/account"
           className={navItemClass}
           activeProps={{ className: activeNavItemClass }}
         >
-          <MessageCircle className="h-4 w-4" />
-          Destek
+          <User className="h-4 w-4" />
+          Hesabim
         </Link>
       </div>
     </nav>
