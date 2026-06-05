@@ -1,25 +1,28 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, X, User, Heart, Plus } from "lucide-react";
+import { Menu, X, User, Heart, Plus, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLanguage, type Lang } from "@/lib/i18n";
 
 const links = [
-  { to: "/", label: "Home" },
-  { to: "/listings", label: "Villas" },
-  { to: "/about", label: "About" },
-  { to: "/contact", label: "Contact" },
+  { to: "/", key: "nav.home" },
+  { to: "/listings", key: "nav.villas" },
+  { to: "/about", key: "nav.about" },
+  { to: "/contact", key: "nav.contact" },
 ] as const;
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const { lang, setLang, t } = useLanguage();
+  const toggle = () => setLang(lang === "tr" ? "ar" : "tr");
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-card">
       {/* Top utility bar */}
       <div className="hidden border-b border-border bg-muted/60 md:block">
         <div className="mx-auto flex h-8 max-w-7xl items-center justify-end gap-5 px-4 text-xs text-muted-foreground sm:px-6">
-          <a href="#" className="hover:text-link">Help</a>
-          <a href="#" className="hover:text-link">EN / AR</a>
-          <a href="#" className="hover:text-link">List your villa</a>
+          <a href="#" className="hover:text-link">{t("nav.help")}</a>
+          <LangSwitcher lang={lang} setLang={setLang} />
+          <a href="#" className="hover:text-link">{t("nav.listVilla")}</a>
         </div>
       </div>
 
@@ -40,26 +43,36 @@ export function SiteHeader() {
               activeProps={{ className: "rounded-sm px-3 py-1.5 text-sm font-semibold text-link bg-muted" }}
               activeOptions={{ exact: l.to === "/" }}
             >
-              {l.label}
+              {t(l.key)}
             </Link>
           ))}
         </nav>
 
         <div className="ml-auto hidden items-center gap-2 md:flex">
           <button className="flex items-center gap-1.5 rounded-sm px-2 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted">
-            <Heart className="h-4 w-4" /> Favorites
+            <Heart className="h-4 w-4" /> {t("nav.favorites")}
           </button>
           <button className="flex items-center gap-1.5 rounded-sm px-2 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted">
-            <User className="h-4 w-4" /> Sign In
+            <User className="h-4 w-4" /> {t("nav.signIn")}
           </button>
           <Button asChild size="sm" className="h-8 gap-1.5 rounded-sm bg-price text-white hover:bg-price/90">
-            <Link to="/contact"><Plus className="h-4 w-4" /> Post Listing</Link>
+            <Link to="/contact"><Plus className="h-4 w-4" /> {t("nav.postListing")}</Link>
           </Button>
         </div>
 
-        <button className="ml-auto md:hidden" onClick={() => setOpen(!open)} aria-label="Menu">
-          {open ? <X /> : <Menu />}
-        </button>
+        <div className="ml-auto flex items-center gap-1 md:hidden">
+          <button
+            onClick={toggle}
+            className="flex items-center gap-1 rounded-sm border border-border px-2 py-1 text-xs font-semibold"
+            aria-label="Language"
+          >
+            <Globe className="h-3.5 w-3.5" />
+            {lang === "tr" ? "TR" : "AR"}
+          </button>
+          <button onClick={() => setOpen(!open)} aria-label="Menu" className="p-1">
+            {open ? <X /> : <Menu />}
+          </button>
+        </div>
       </div>
 
       {open && (
@@ -72,12 +85,33 @@ export function SiteHeader() {
                 className="border-b border-border/60 py-3 text-sm font-semibold text-foreground last:border-0"
                 onClick={() => setOpen(false)}
               >
-                {l.label}
+                {t(l.key)}
               </Link>
             ))}
           </nav>
         </div>
       )}
     </header>
+  );
+}
+
+function LangSwitcher({ lang, setLang }: { lang: Lang; setLang: (l: Lang) => void }) {
+  return (
+    <div className="flex items-center gap-1">
+      <Globe className="h-3.5 w-3.5" />
+      <button
+        onClick={() => setLang("tr")}
+        className={`px-1 font-semibold ${lang === "tr" ? "text-link" : "hover:text-link"}`}
+      >
+        TR
+      </button>
+      <span className="text-muted-foreground/60">/</span>
+      <button
+        onClick={() => setLang("ar")}
+        className={`px-1 font-semibold ${lang === "ar" ? "text-link" : "hover:text-link"}`}
+      >
+        AR
+      </button>
+    </div>
   );
 }
