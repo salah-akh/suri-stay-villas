@@ -4,14 +4,11 @@ import {
   BadgeCheck,
   CalendarDays,
   ChevronRight,
-  HeartHandshake,
+  Heart,
   MapPin,
   Search,
-  Shield,
-  Sparkles,
-  Star,
+  SlidersHorizontal,
 } from "lucide-react";
-import heroImage from "@/assets/hero.jpg";
 import { AdSlot } from "@/components/AdSlot";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -24,16 +21,15 @@ import { cities, listings, propertyTypes } from "@/data/listings";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Hajazna - Discover Exceptional Villas Across Syria" },
+      { title: "Hajazna - Villa ve Yazlik Kiralama" },
       {
         name: "description",
-        content:
-          "Find private villas, family retreats, and unique stays across Syria, from Damascus to the Mediterranean coast.",
+        content: "Villa, yazlik ve ozel konaklama yerlerini sehir, tarih ve tipe gore arayin.",
       },
-      { property: "og:title", content: "Hajazna - Discover Exceptional Villas Across Syria" },
+      { property: "og:title", content: "Hajazna - Villa ve Yazlik Kiralama" },
       {
         property: "og:description",
-        content: "Find private villas, family retreats, and unique stays across Syria.",
+        content: "Villa, yazlik ve ozel konaklama yerlerini kolayca bulun.",
       },
     ],
   }),
@@ -41,83 +37,56 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const [city, setCity] = useState<string>("");
-  const [type, setType] = useState<string>("");
+  const [city, setCity] = useState<string>("all");
+  const [type, setType] = useState<string>("all");
   const navigate = Route.useNavigate();
 
-  const featured = listings.slice(0, 8);
+  const featured = listings.slice(0, 6);
   const popular = ["Damascus", "Aleppo", "Latakia", "Palmyra", "Homs", "Tartus", "Bloudan", "Kassab"];
+  const quickTypes = propertyTypes.slice(0, 6);
+  const cityHighlights = cities.slice(0, 6).map((item) => ({
+    city: item,
+    count: listings.filter((listing) => listing.city === item).length,
+  }));
 
   const onSearch = () => {
-    navigate({ to: "/listings", search: { city: city || undefined, type: type || undefined } as any });
+    navigate({
+      to: "/listings",
+      search: {
+        city: city === "all" ? undefined : city,
+        type: type === "all" ? undefined : type,
+      } as any,
+    });
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-muted/40">
       <SiteHeader />
       <main className="flex-1">
-        <section className="relative isolate overflow-hidden bg-secondary text-white">
-          <img
-            src={heroImage}
-            alt="Villa terrace with pool at sunset"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-secondary via-secondary/75 to-secondary/20" />
-          <div className="absolute inset-0 bg-gradient-to-t from-secondary/85 via-transparent to-black/20" />
-
-          <div className="relative mx-auto max-w-7xl px-4 py-20 pb-28 sm:px-6 sm:py-24 sm:pb-32 lg:py-28">
-            <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-md border border-white/20 bg-white/10 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur">
-                <Sparkles className="h-4 w-4 text-primary-glow" />
-                Curated Syrian stays
-              </div>
-              <h1 className="mt-5 text-4xl font-extrabold leading-tight sm:text-6xl">
-                Private villas across Syria
+        <section className="mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-8">
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-primary">Villa ve yazlik kiralama</p>
+              <h1 className="mt-1 text-2xl font-extrabold text-foreground sm:text-3xl">
+                Nereye gitmek istiyorsun?
               </h1>
-              <p className="mt-5 max-w-xl text-base leading-7 text-white/80 sm:text-lg">
-                Heritage homes, coastal villas, and quiet mountain retreats selected for comfort,
-                privacy, and memorable stays.
-              </p>
-              <div className="mt-7 flex flex-wrap items-center gap-3">
-                <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
-                  <Link to="/listings">
-                    <Search className="h-4 w-4" /> Explore villas
-                  </Link>
-                </Button>
-                <Link
-                  to="/contact"
-                  className="inline-flex h-10 items-center justify-center rounded-md border border-white/25 px-5 text-sm font-semibold text-white transition hover:bg-white/10"
-                >
-                  List your villa
-                </Link>
-              </div>
-
-              <div className="mt-9 grid max-w-xl grid-cols-3 gap-3">
-                {[
-                  { value: `${listings.length}+`, label: "verified villas" },
-                  { value: "8", label: "destinations" },
-                  { value: "24h", label: "booking help" },
-                ].map((item) => (
-                  <div key={item.label} className="rounded-lg border border-white/15 bg-white/10 p-3 backdrop-blur">
-                    <div className="text-xl font-extrabold">{item.value}</div>
-                    <div className="mt-1 text-xs text-white/70">{item.label}</div>
-                  </div>
-                ))}
-              </div>
             </div>
+            <Button asChild variant="outline" size="icon" className="h-10 w-10 rounded-full bg-card">
+              <Link to="/listings" aria-label="Filtreleri ac">
+                <SlidersHorizontal className="h-4 w-4" />
+              </Link>
+            </Button>
           </div>
-        </section>
 
-        <section className="relative bg-background">
-          <div className="mx-auto max-w-7xl px-4 pb-10 sm:px-6">
-            <div className="-mt-12 rounded-lg border border-border/80 bg-card p-3 shadow-[var(--shadow-elegant)] sm:p-4">
-              <div className="grid gap-3 lg:grid-cols-[1fr_1fr_0.9fr_0.9fr_auto]">
+          <div className="mt-5 rounded-lg border border-border/80 bg-card p-3 shadow-[var(--shadow-elegant)] sm:p-4">
+            <div className="grid gap-3 lg:grid-cols-[1fr_1fr_0.9fr_0.9fr_auto]">
                 <Select value={city} onValueChange={setCity}>
                   <SelectTrigger className="h-12 rounded-md bg-background">
                     <MapPin className="mr-2 h-4 w-4 text-primary" />
-                    <SelectValue placeholder="All cities" />
+                    <SelectValue placeholder="Sehir sec" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="all">Tum sehirler</SelectItem>
                     {cities.map((item) => (
                       <SelectItem key={item} value={item}>
                         {item}
@@ -129,9 +98,10 @@ function Index() {
                 <Select value={type} onValueChange={setType}>
                   <SelectTrigger className="h-12 rounded-md bg-background">
                     <BadgeCheck className="mr-2 h-4 w-4 text-primary" />
-                    <SelectValue placeholder="Property type" />
+                    <SelectValue placeholder="Konaklama tipi" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="all">Tum tipler</SelectItem>
                     {propertyTypes.map((item) => (
                       <SelectItem key={item} value={item}>
                         {item}
@@ -142,124 +112,106 @@ function Index() {
 
                 <div className="relative">
                   <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
-                  <Input type="date" aria-label="Check in" className="h-12 rounded-md bg-background pl-9" />
+                  <Input type="date" aria-label="Giris tarihi" className="h-12 rounded-md bg-background pl-9" />
                 </div>
                 <div className="relative">
                   <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
-                  <Input type="date" aria-label="Check out" className="h-12 rounded-md bg-background pl-9" />
+                  <Input type="date" aria-label="Cikis tarihi" className="h-12 rounded-md bg-background pl-9" />
                 </div>
 
                 <Button onClick={onSearch} className="h-12 min-w-36 bg-secondary text-secondary-foreground hover:bg-secondary/90">
-                  <Search className="h-4 w-4" /> Search
+                  <Search className="h-4 w-4" /> Ara
                 </Button>
               </div>
 
-              <div className="mt-4 flex flex-wrap items-center gap-2">
-                <span className="text-sm font-semibold text-muted-foreground">Popular</span>
+              <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
+                <span className="shrink-0 rounded-md bg-muted px-3 py-1.5 text-sm font-semibold text-muted-foreground">
+                  Populer
+                </span>
                 {popular.map((item) => (
                   <Link
                     key={item}
                     to="/listings"
                     search={{ city: item } as any}
-                    className="rounded-md border border-border/80 bg-background px-3 py-1.5 text-sm font-semibold text-foreground transition hover:border-primary/40 hover:text-primary"
+                    className="shrink-0 rounded-md border border-border/80 bg-background px-3 py-1.5 text-sm font-semibold text-foreground transition hover:border-primary/40 hover:text-primary"
                   >
                     {item}
                   </Link>
                 ))}
               </div>
             </div>
-          </div>
         </section>
 
-        <div className="mx-auto max-w-7xl px-4 pb-2 sm:px-6">
+        <div className="mx-auto max-w-7xl px-4 pb-4 sm:px-6">
           <AdSlot slotId="home-inline" />
         </div>
 
-        <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14">
-          <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+        <section className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
+          <div className="mb-4 flex items-end justify-between gap-4">
             <div>
-              <p className="text-sm font-semibold text-primary">Featured collection</p>
-              <h2 className="mt-2 text-2xl font-extrabold text-foreground sm:text-3xl">
-                Villas guests ask for first
+              <p className="text-sm font-semibold text-primary">Hizli filtreler</p>
+              <h2 className="mt-1 text-xl font-extrabold text-foreground">Yazlik tarzini sec</h2>
+            </div>
+          </div>
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {quickTypes.map((item) => (
+              <Link
+                key={item}
+                to="/listings"
+                search={{ type: item } as any}
+                className="shrink-0 rounded-md border border-border/80 bg-card px-4 py-3 text-sm font-bold text-foreground shadow-[var(--shadow-card)] transition hover:border-primary/40 hover:text-primary"
+              >
+                {item}
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8">
+          <div className="mb-5 flex items-end justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold text-primary">One cikanlar</p>
+              <h2 className="mt-1 text-xl font-extrabold text-foreground sm:text-2xl">
+                Bugun bakabilecegin villalar
               </h2>
             </div>
-            <Link to="/listings" className="flex items-center gap-1 text-sm font-bold text-link hover:underline">
-              View all <ChevronRight className="h-4 w-4" />
+            <Link to="/listings" className="flex shrink-0 items-center gap-1 text-sm font-bold text-link hover:underline">
+              Hepsi <ChevronRight className="h-4 w-4" />
             </Link>
           </div>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {featured.map((listing) => (
               <PropertyCard key={listing.id} listing={listing} />
             ))}
           </div>
         </section>
 
-        <section className="bg-secondary text-secondary-foreground">
-          <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-3">
-            {[
-              {
-                icon: Shield,
-                title: "Verified homes",
-                description: "Every villa is reviewed for photos, amenities, location, and guest readiness.",
-              },
-              {
-                icon: HeartHandshake,
-                title: "Human booking help",
-                description: "Message our team directly and confirm stay details before you travel.",
-              },
-              {
-                icon: Star,
-                title: "Memorable stays",
-                description: "Choose from heritage courtyards, beach villas, mountain chalets, and family estates.",
-              },
-            ].map((item) => (
-              <div key={item.title} className="flex gap-4">
-                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                  <item.icon className="h-5 w-5" />
-                </div>
-                <div>
-                  <h3 className="text-base font-bold text-white">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-secondary-foreground/72">{item.description}</p>
-                </div>
-              </div>
-            ))}
+        <section className="mx-auto max-w-7xl px-4 pb-10 sm:px-6 sm:pb-14">
+          <div className="mb-5 flex items-end justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold text-primary">Sehre gore kesfet</p>
+              <h2 className="mt-1 text-xl font-extrabold text-foreground">Populer lokasyonlar</h2>
+            </div>
           </div>
-        </section>
-
-        <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14">
-          <div className="mb-6">
-            <p className="text-sm font-semibold text-primary">Guest notes</p>
-            <h2 className="mt-2 text-2xl font-extrabold text-foreground">What travelers remember</h2>
-          </div>
-          <div className="grid gap-4 md:grid-cols-3">
-            {[
-              {
-                name: "Layla H.",
-                city: "Damascus",
-                quote: "The Damascene Heritage Villa felt personal, calm, and beautifully kept.",
-              },
-              {
-                name: "Omar A.",
-                city: "Latakia",
-                quote: "Booking through WhatsApp was simple. The seaside villa exceeded expectations.",
-              },
-              {
-                name: "Nour & Family",
-                city: "Bloudan",
-                quote: "A spotless chalet with mountain views, easy check-in, and a wonderful host.",
-              },
-            ].map((item) => (
-              <div key={item.name} className="rounded-lg border border-border/80 bg-card p-5 shadow-[var(--shadow-card)]">
-                <div className="flex gap-1 text-primary">
-                  {Array.from({ length: 5 }).map((_, index) => (
-                    <Star key={index} className="h-4 w-4 fill-current" />
-                  ))}
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {cityHighlights.map((item) => (
+              <Link
+                key={item.city}
+                to="/listings"
+                search={{ city: item.city } as any}
+                className="flex items-center justify-between rounded-lg border border-border/80 bg-card p-4 shadow-[var(--shadow-card)] transition hover:border-primary/40 hover:text-primary"
+              >
+                <div className="flex min-w-0 items-center gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                    <MapPin className="h-4 w-4" />
+                  </span>
+                  <div className="min-w-0">
+                    <h3 className="truncate text-sm font-extrabold text-foreground">{item.city}</h3>
+                    <p className="mt-1 text-xs text-muted-foreground">{item.count} ilan</p>
+                  </div>
                 </div>
-                <p className="mt-4 text-sm leading-6 text-foreground">"{item.quote}"</p>
-                <div className="mt-4 text-sm font-bold text-foreground">
-                  {item.name} <span className="font-medium text-muted-foreground">/ {item.city}</span>
-                </div>
-              </div>
+                <Heart className="h-4 w-4 text-muted-foreground" />
+              </Link>
             ))}
           </div>
         </section>
