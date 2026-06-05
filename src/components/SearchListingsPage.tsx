@@ -127,11 +127,13 @@ export function SearchListingsPage({
                   Aradigin ilani kolayca bul
                 </h1>
               </div>
-              <Button asChild className="h-11 bg-primary text-primary-foreground hover:bg-primary/90">
-                <Link to="/post-listing">
-                  <Plus className="h-4 w-4" /> Ucretsiz ilan ver
-                </Link>
-              </Button>
+              <div className="hidden lg:block">
+                <Button asChild className="h-11 bg-primary text-primary-foreground hover:bg-primary/90">
+                  <Link to="/post-listing">
+                    <Plus className="h-4 w-4" /> Ucretsiz ilan ver
+                  </Link>
+                </Button>
+              </div>
             </div>
 
             <div className="relative mt-4">
@@ -223,98 +225,137 @@ export function SearchListingsPage({
 
           <div className="min-w-0">
             <div className="lg:hidden">
-              <div className="rounded-lg border border-border/80 bg-card p-4 shadow-[var(--shadow-card)]">
-                <SidebarTitle icon={<Home className="h-4 w-4" />} title="Kategoriler" />
-                <div className="mt-3 space-y-1">
-                  <SidebarButton
-                    active={category === "all"}
-                    label="Tum Villa & Yazlik"
-                    count={listings.length}
-                    onClick={() => setCategory("all")}
+              <p className="px-1 text-sm font-extrabold text-foreground">Kategoriler</p>
+              <div className="mt-2 divide-y divide-border/70">
+                <MobileCategoryRow
+                  active={category === "all"}
+                  label="Tum Villa & Yazlik"
+                  description="Tum kiralik villa ve yazlik ilanlari."
+                  count={listings.length}
+                  onClick={() => setCategory("all")}
+                />
+                {listingCategories.map((item) => (
+                  <MobileCategoryRow
+                    key={item.id}
+                    label={item.title}
+                    description={getCategoryDescription(item.id)}
+                    active={category === item.id}
+                    count={countForCategory(item.type, item.id, item.title)}
+                    onClick={() => {
+                      setCategory(item.id);
+                      setType("all");
+                    }}
                   />
-                  {listingCategories.map((item) => (
-                    <SidebarButton
-                      key={item.id}
-                      label={item.title}
-                      active={category === item.id}
-                      count={countForCategory(item.type, item.id, item.title)}
-                      onClick={() => {
-                        setCategory(item.id);
-                        setType("all");
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-4 space-y-4">
-                <OptionGroup title="Sehir">
-                  <FilterChip label="Tum sehirler" active={city === "all"} onClick={() => setCity("all")} />
-                  {cities.map((item) => (
-                    <FilterChip key={item} label={item} active={city === item} onClick={() => setCity(item)} />
-                  ))}
-                </OptionGroup>
-                <OptionGroup title="Ilan tipi">
-                  <FilterChip label="Tum tipler" active={type === "all"} onClick={() => setType("all")} />
-                  {propertyTypes.map((item) => (
-                    <FilterChip key={item} label={item} active={type === item} onClick={() => setType(item)} />
-                  ))}
-                </OptionGroup>
+                ))}
               </div>
             </div>
 
-            <div className="mb-4 rounded-lg border border-border/80 bg-card p-4 shadow-[var(--shadow-card)]">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <p className="text-base font-extrabold text-foreground">{filtered.length} ilan bulundu</p>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Kategoriden sec, ilana bas, detay ve iletisim bilgilerini gor.
-                  </p>
+            <div className="hidden lg:block">
+              <div className="mb-4 rounded-lg border border-border/80 bg-card p-4 shadow-[var(--shadow-card)]">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p className="text-base font-extrabold text-foreground">{filtered.length} ilan bulundu</p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Kategoriden sec, ilana bas, detay ve iletisim bilgilerini gor.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <SortButton active={sort === "default"} label="Varsayilan" onClick={() => setSort("default")} />
+                    <SortButton active={sort === "price-asc"} label="Ucuzdan pahaliya" onClick={() => setSort("price-asc")} />
+                    <SortButton active={sort === "price-desc"} label="Pahalidan ucuza" onClick={() => setSort("price-desc")} />
+                  </div>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  <SortButton active={sort === "default"} label="Varsayilan" onClick={() => setSort("default")} />
-                  <SortButton active={sort === "price-asc"} label="Ucuzdan pahaliya" onClick={() => setSort("price-asc")} />
-                  <SortButton active={sort === "price-desc"} label="Pahalidan ucuza" onClick={() => setSort("price-desc")} />
-                  <Button variant="outline" onClick={clearFilters} className="h-9 bg-background lg:hidden">
-                    <X className="h-4 w-4" /> Temizle
+              </div>
+
+              {filtered.length === 0 ? (
+                <div className="rounded-lg border border-border/80 bg-card p-8 text-center shadow-[var(--shadow-card)]">
+                  <MapPin className="mx-auto h-8 w-8 text-primary" />
+                  <h2 className="mt-3 text-lg font-bold text-foreground">Ilan bulunamadi</h2>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Arama kelimesini silin veya farkli bir kategori secin.
+                  </p>
+                  <Button onClick={clearFilters} className="mt-5 bg-primary text-primary-foreground hover:bg-primary/90">
+                    Tum ilanlari goster
                   </Button>
                 </div>
-              </div>
+              ) : (
+                <div className="overflow-hidden rounded-lg border border-border/80 bg-card shadow-[var(--shadow-card)]">
+                  <div className="hidden grid-cols-[1fr_90px_90px_150px_110px_130px] gap-3 border-b border-border/80 bg-muted/60 px-4 py-3 text-xs font-extrabold uppercase text-muted-foreground lg:grid">
+                    <span>Ilan basligi</span>
+                    <span>m2</span>
+                    <span>Oda</span>
+                    <span>Konum</span>
+                    <span>Tarih</span>
+                    <span className="text-right">Fiyat</span>
+                  </div>
+                  <div className="divide-y divide-border/80">
+                    {filtered.map((listing) => (
+                      <ClassifiedRow key={listing.id} listing={listing} />
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-
-            {filtered.length === 0 ? (
-              <div className="rounded-lg border border-border/80 bg-card p-8 text-center shadow-[var(--shadow-card)]">
-                <MapPin className="mx-auto h-8 w-8 text-primary" />
-                <h2 className="mt-3 text-lg font-bold text-foreground">Ilan bulunamadi</h2>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Arama kelimesini silin veya farkli bir kategori secin.
-                </p>
-                <Button onClick={clearFilters} className="mt-5 bg-primary text-primary-foreground hover:bg-primary/90">
-                  Tum ilanlari goster
-                </Button>
-              </div>
-            ) : (
-              <div className="overflow-hidden rounded-lg border border-border/80 bg-card shadow-[var(--shadow-card)]">
-                <div className="hidden grid-cols-[1fr_90px_90px_150px_110px_130px] gap-3 border-b border-border/80 bg-muted/60 px-4 py-3 text-xs font-extrabold uppercase text-muted-foreground lg:grid">
-                  <span>Ilan basligi</span>
-                  <span>m2</span>
-                  <span>Oda</span>
-                  <span>Konum</span>
-                  <span>Tarih</span>
-                  <span className="text-right">Fiyat</span>
-                </div>
-                <div className="divide-y divide-border/80">
-                  {filtered.map((listing) => (
-                    <ClassifiedRow key={listing.id} listing={listing} />
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         </section>
       </main>
       <SiteFooter />
     </div>
+  );
+}
+
+function getCategoryDescription(categoryId: string) {
+  const descriptions: Record<string, string> = {
+    "daily-villa": "Gunluk kiralanabilen mustakil villalar.",
+    "summer-house": "Tatil ve sezonluk yazlik konaklamalar.",
+    "beach-villa": "Denize yakin sahil bolgesi ilanlari.",
+    "private-villa": "Aileye uygun, daha ozel havuzlu ilanlar.",
+    "mountain-house": "Dag ve doga icinde sakin konaklamalar.",
+    bungalow: "Kucuk, pratik ve dogaya yakin konaklamalar.",
+  };
+
+  return descriptions[categoryId] ?? "Bu kategoriye ait kiralik konaklamalar.";
+}
+
+function MobileCategoryRow({
+  label,
+  description,
+  count,
+  active,
+  onClick,
+}: {
+  label: string;
+  description: string;
+  count: number;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex w-full items-start gap-3 px-1 py-3.5 text-left transition ${
+        active ? "text-primary" : "text-foreground"
+      }`}
+    >
+      <span
+        className={`mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${
+          active ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary"
+        }`}
+      >
+        <Home className="h-4 w-4" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="flex items-start justify-between gap-3">
+          <span className="text-sm font-extrabold">{label}</span>
+          <span className="mt-0.5 shrink-0 rounded-full bg-muted px-2 py-0.5 text-[11px] font-bold text-muted-foreground">
+            {count}
+          </span>
+        </span>
+        <span className="mt-1 block text-xs leading-5 text-muted-foreground">{description}</span>
+      </span>
+      <ChevronRight className="mt-3 h-4 w-4 shrink-0 text-muted-foreground" />
+    </button>
   );
 }
 
@@ -397,7 +438,7 @@ function ClassifiedRow({ listing }: { listing: Listing }) {
           </h2>
           <p className="mt-1 text-xs font-semibold text-muted-foreground">Ilan No: {listingNo}</p>
           <p className="mt-2 line-clamp-1 text-xs text-muted-foreground lg:hidden">
-            {area} m2 · {room} · {listing.city} / {listing.region}
+            {area} m2 - {room} - {listing.city} / {listing.region}
           </p>
         </div>
       </div>
@@ -421,38 +462,5 @@ function MetaCell({ icon, value }: { icon: ReactNode; value: string }) {
       <span className="text-primary">{icon}</span>
       <span className="truncate">{value}</span>
     </div>
-  );
-}
-
-function OptionGroup({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <div>
-      <p className="mb-2 text-sm font-extrabold text-foreground">{title}</p>
-      <div className="flex gap-2 overflow-x-auto pb-1">{children}</div>
-    </div>
-  );
-}
-
-function FilterChip({
-  label,
-  active,
-  onClick,
-}: {
-  label: string;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`shrink-0 rounded-full border px-4 py-2 text-sm font-bold transition ${
-        active
-          ? "border-primary bg-primary text-primary-foreground"
-          : "border-border/80 bg-background text-foreground hover:border-primary/40"
-      }`}
-    >
-      {label}
-    </button>
   );
 }

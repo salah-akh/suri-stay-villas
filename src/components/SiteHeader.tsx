@@ -1,6 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { Home, Menu, Plus, X } from "lucide-react";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { Bell, Home, Plus } from "lucide-react";
 import { AdSlot } from "@/components/AdSlot";
 import { AppBottomNav } from "@/components/AppBottomNav";
 import { Button } from "@/components/ui/button";
@@ -11,24 +10,30 @@ const links = [
 ] as const;
 
 export function SiteHeader() {
-  const [open, setOpen] = useState(false);
+  const pageTitle = useRouterState({
+    select: (state) => getPageTitle(state.location.pathname),
+  });
 
   return (
     <>
       <header className="sticky top-0 z-40 w-full border-b border-border/80 bg-card/95 text-foreground shadow-[var(--shadow-card)] backdrop-blur">
         <AdSlot slotId="top" variant="top" />
-        <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6">
+        <div className="relative mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6">
           <Link to="/" className="flex min-w-0 items-center gap-2">
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-[var(--shadow-card)]">
               <Home className="h-4 w-4" />
             </span>
-            <span className="min-w-0 leading-none">
+            <span className="hidden min-w-0 leading-none md:block">
               <span className="block truncate text-lg font-extrabold">Hajazna</span>
               <span className="mt-1 block truncate text-[11px] font-medium text-muted-foreground">
                 Villa kiralama
               </span>
             </span>
           </Link>
+
+          <div className="pointer-events-none absolute left-1/2 max-w-[48vw] -translate-x-1/2 truncate text-sm font-extrabold text-foreground md:hidden">
+            {pageTitle}
+          </div>
 
           <nav className="ml-3 hidden items-center gap-1 md:flex">
             {links.map((link) => (
@@ -56,37 +61,30 @@ export function SiteHeader() {
           </div>
 
           <button
-            onClick={() => setOpen(!open)}
-            aria-label="Menu"
+            type="button"
+            aria-label="Bildirimler"
             className="ml-auto flex h-9 w-9 items-center justify-center rounded-md border border-border bg-background text-foreground md:hidden"
           >
-            {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            <Bell className="h-4 w-4" />
           </button>
         </div>
-
-        {open && (
-          <div className="border-t border-border/70 bg-card md:hidden">
-            <nav className="mx-auto flex max-w-7xl flex-col px-4 py-3">
-              {links.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className="rounded-md px-2 py-3 text-sm font-semibold text-muted-foreground"
-                  onClick={() => setOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              ))}
-              <Button asChild className="mt-2 bg-primary text-primary-foreground hover:bg-primary/90">
-                <Link to="/post-listing" onClick={() => setOpen(false)}>
-                  <Plus className="h-4 w-4" /> Ilan ver
-                </Link>
-              </Button>
-            </nav>
-          </div>
-        )}
       </header>
       <AppBottomNav />
     </>
   );
+}
+
+function getPageTitle(pathname: string) {
+  if (pathname === "/") return "Anasayfa";
+  if (pathname.startsWith("/messages")) return "Mesajlar";
+  if (pathname.startsWith("/post-listing")) return "Ilan ver";
+  if (pathname.startsWith("/favorites")) return "Favoriler";
+  if (pathname.startsWith("/account")) return "Hesabim";
+  if (pathname.startsWith("/listings/")) return "Ilan detayi";
+  if (pathname.startsWith("/listings")) return "Ilanlar";
+  if (pathname.startsWith("/contact")) return "Destek";
+  if (pathname.startsWith("/admin")) return "Admin";
+  if (pathname.startsWith("/about")) return "Hakkimizda";
+
+  return "Hajazna";
 }
