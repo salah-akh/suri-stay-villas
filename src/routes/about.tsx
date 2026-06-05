@@ -24,16 +24,16 @@ function About() {
     <div className="flex min-h-screen flex-col bg-background">
       <SiteHeader />
       <main className="flex-1">
-        <section className="bg-secondary text-secondary-foreground">
+        <section className="border-b border-border/70 bg-card text-foreground">
           <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20">
             <div className="max-w-3xl">
-              <p className="inline-flex items-center gap-2 rounded-md bg-white/10 px-3 py-1.5 text-sm font-semibold text-primary-glow">
+              <p className="inline-flex items-center gap-2 rounded-md bg-primary/10 px-3 py-1.5 text-sm font-semibold text-primary">
                 <Sparkles className="h-4 w-4" /> About Hajazna
               </p>
-              <h1 className="mt-5 text-4xl font-extrabold leading-tight text-white sm:text-5xl">
+              <h1 className="mt-5 text-4xl font-extrabold leading-tight text-foreground sm:text-5xl">
                 A calmer way to discover private stays in Syria
               </h1>
-              <p className="mt-5 max-w-2xl text-base leading-7 text-secondary-foreground/75 sm:text-lg">
+              <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
                 Hajazna brings carefully selected villas, heritage homes, and family retreats into one
                 trusted place for travelers returning home, visiting family, or exploring Syria.
               </p>

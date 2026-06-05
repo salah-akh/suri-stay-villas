@@ -143,7 +143,7 @@ function Index() {
                   <Input type="date" aria-label="Cikis tarihi" className="h-12 rounded-md bg-card pl-9" />
                 </div>
 
-                <Button onClick={onSearch} className="h-12 min-w-36 bg-secondary text-secondary-foreground hover:bg-secondary/90">
+                <Button onClick={onSearch} className="h-12 min-w-36 bg-primary text-primary-foreground hover:bg-primary/90">
                   <Search className="h-4 w-4" /> Ara
                 </Button>
               </div>

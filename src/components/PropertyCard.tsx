@@ -19,7 +19,7 @@ export function PropertyRow({ listing }: { listing: Listing }) {
         <span className="absolute left-2 top-2 rounded-md bg-primary px-2 py-1 text-[11px] font-extrabold text-primary-foreground shadow-sm">
           Vitrin
         </span>
-        <span className="absolute bottom-2 left-2 flex items-center gap-1 rounded-md bg-secondary/85 px-2 py-1 text-[11px] font-semibold text-white backdrop-blur">
+        <span className="absolute bottom-2 left-2 flex items-center gap-1 rounded-md bg-card/95 px-2 py-1 text-[11px] font-semibold text-foreground shadow-sm backdrop-blur">
           <Camera className="h-3 w-3" /> {listing.gallery.length}
         </span>
       </div>
@@ -87,16 +87,16 @@ export function PropertyCard({ listing }: { listing: Listing }) {
           loading="lazy"
           className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
         />
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-secondary/80 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-foreground/45 to-transparent" />
         <div className="absolute left-3 right-3 top-3 flex items-start justify-between gap-2">
           <span className="rounded-md bg-primary px-2.5 py-1 text-xs font-extrabold text-primary-foreground shadow-sm">
             Vitrin
           </span>
-          <span className="flex h-9 w-9 items-center justify-center rounded-md bg-white/95 text-secondary shadow-sm">
+          <span className="flex h-9 w-9 items-center justify-center rounded-md bg-card/95 text-primary shadow-sm">
             <Heart className="h-4 w-4" />
           </span>
         </div>
-        <span className="absolute bottom-3 left-3 flex max-w-[calc(100%-1.5rem)] items-center gap-1 rounded-md bg-white/95 px-2.5 py-1 text-xs font-bold text-secondary shadow-sm">
+        <span className="absolute bottom-3 left-3 flex max-w-[calc(100%-1.5rem)] items-center gap-1 rounded-md bg-card/95 px-2.5 py-1 text-xs font-bold text-foreground shadow-sm">
           <MapPin className="h-3.5 w-3.5 text-primary" /> {listing.city} / {listing.region}
         </span>
       </div>

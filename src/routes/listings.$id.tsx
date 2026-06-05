@@ -97,8 +97,8 @@ function ListingDetail() {
                 alt={listing.title}
                 className="aspect-[16/9] w-full object-cover"
               />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-secondary/80 to-transparent p-5 text-white">
-                <p className="flex items-center gap-2 text-sm font-semibold text-white/85">
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-foreground/70 to-transparent p-5 text-primary-foreground">
+                <p className="flex items-center gap-2 text-sm font-semibold text-primary-foreground/85">
                   <MapPin className="h-4 w-4" /> {listing.region}, {listing.city}
                 </p>
                 <h1 className="mt-2 max-w-3xl text-2xl font-extrabold sm:text-4xl">{listing.title}</h1>
@@ -202,7 +202,7 @@ function ListingDetail() {
                 </label>
               </div>
 
-              <Button asChild size="lg" className="mt-5 w-full bg-price text-white hover:bg-price/90">
+              <Button asChild size="lg" className="mt-5 w-full bg-price text-primary-foreground hover:bg-price/90">
                 <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">
                   <MessageCircle className="h-5 w-5" /> Book via WhatsApp
                 </a>
