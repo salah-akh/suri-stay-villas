@@ -16,7 +16,7 @@ import { PropertyCard } from "@/components/PropertyCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { cities, listings, propertyTypes } from "@/data/listings";
+import { useListingsCatalog } from "@/lib/listing-store";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -40,6 +40,7 @@ function Index() {
   const [city, setCity] = useState<string>("all");
   const [type, setType] = useState<string>("all");
   const navigate = Route.useNavigate();
+  const { listings, cities, propertyTypes } = useListingsCatalog();
 
   const featured = listings.slice(0, 6);
   const popular = ["Damascus", "Aleppo", "Latakia", "Palmyra", "Homs", "Tartus", "Bloudan", "Kassab"];

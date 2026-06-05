@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { cities, listings, propertyTypes } from "@/data/listings";
+import { useListingsCatalog } from "@/lib/listing-store";
 
 const searchSchema = z.object({
   city: z.string().optional(),
@@ -41,6 +41,7 @@ function ListingsPage() {
   const [privateOnly, setPrivateOnly] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [sort, setSort] = useState("featured");
+  const { listings, cities, propertyTypes } = useListingsCatalog();
 
   const filtered = useMemo(() => {
     let results = listings.filter(

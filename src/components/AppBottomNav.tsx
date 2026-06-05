@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Home, MessageCircle, Search, Settings } from "lucide-react";
+import { Home, MessageCircle, Plus, Search } from "lucide-react";
 
 export function AppBottomNav() {
   return (
@@ -40,15 +40,15 @@ export function AppBottomNav() {
           Destek
         </Link>
         <Link
-          to="/admin"
+          to="/post-listing"
           className="flex min-h-12 flex-col items-center justify-center gap-1 rounded-md text-[11px] font-bold text-muted-foreground"
           activeProps={{
             className:
               "flex min-h-12 flex-col items-center justify-center gap-1 rounded-md bg-primary/10 text-[11px] font-bold text-primary",
           }}
         >
-          <Settings className="h-4 w-4" />
-          Admin
+          <Plus className="h-4 w-4" />
+          Ilan ver
         </Link>
       </div>
     </nav>

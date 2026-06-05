@@ -13,6 +13,7 @@ import { Route as ListingsRouteImport } from './routes/listings'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as PostListingRouteImport } from './routes/post-listing'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ListingsIdRouteImport } from './routes/listings.$id'
 
@@ -36,6 +37,11 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PostListingRoute = PostListingRouteImport.update({
+  id: '/post-listing',
+  path: '/post-listing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/post-listing': typeof PostListingRoute
   '/listings': typeof ListingsRouteWithChildren
   '/listings/$id': typeof ListingsIdRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/post-listing': typeof PostListingRoute
   '/listings': typeof ListingsRouteWithChildren
   '/listings/$id': typeof ListingsIdRoute
 }
@@ -69,15 +77,16 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/post-listing': typeof PostListingRoute
   '/listings': typeof ListingsRouteWithChildren
   '/listings/$id': typeof ListingsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/about' | '/contact' | '/listings' | '/listings/$id'
+  fullPaths: '/' | '/admin' | '/about' | '/contact' | '/post-listing' | '/listings' | '/listings/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/about' | '/contact' | '/listings' | '/listings/$id'
-  id: '__root__' | '/' | '/admin' | '/about' | '/contact' | '/listings' | '/listings/$id'
+  to: '/' | '/admin' | '/about' | '/contact' | '/post-listing' | '/listings' | '/listings/$id'
+  id: '__root__' | '/' | '/admin' | '/about' | '/contact' | '/post-listing' | '/listings' | '/listings/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -85,6 +94,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
+  PostListingRoute: typeof PostListingRoute
   ListingsRoute: typeof ListingsRouteWithChildren
 }
 
@@ -116,6 +126,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/post-listing': {
+      id: '/post-listing'
+      path: '/post-listing'
+      fullPath: '/post-listing'
+      preLoaderRoute: typeof PostListingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -152,6 +169,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
+  PostListingRoute: PostListingRoute,
   ListingsRoute: ListingsRouteWithChildren,
 }
 export const routeTree = rootRouteImport

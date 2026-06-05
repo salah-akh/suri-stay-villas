@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArrowLeft, CalendarDays, Check, MapPin, MessageCircle, Shield, Sun } from "lucide-react";
 import { AdSlot } from "@/components/AdSlot";
@@ -8,15 +8,15 @@ import { Input } from "@/components/ui/input";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { listings } from "@/data/listings";
+import { useUserListings } from "@/lib/listing-store";
 
 export const Route = createFileRoute("/listings/$id")({
   loader: ({ params }) => {
     const listing = listings.find((item) => item.id === params.id);
-    if (!listing) throw notFound();
-    return { listing };
+    return { listing, id: params.id };
   },
   head: ({ loaderData }) => ({
-    meta: loaderData
+    meta: loaderData?.listing
       ? [
           { title: `${loaderData.listing.title} - Hajazna` },
           { name: "description", content: loaderData.listing.description },
@@ -40,10 +40,36 @@ export const Route = createFileRoute("/listings/$id")({
 });
 
 function ListingDetail() {
-  const { listing } = Route.useLoaderData();
+  const { listing: staticListing, id } = Route.useLoaderData();
+  const [userListings] = useUserListings();
+  const listing = staticListing ?? userListings.find((item) => item.id === id);
   const [activeImg, setActiveImg] = useState(0);
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
+
+  if (!listing) {
+    return (
+      <div className="flex min-h-screen flex-col bg-background">
+        <SiteHeader />
+        <main className="flex flex-1 items-center justify-center px-4">
+          <div className="max-w-md text-center">
+            <h1 className="text-2xl font-extrabold text-foreground">
+              {id.startsWith("user-") ? "Ilan yukleniyor" : "Ilan bulunamadi"}
+            </h1>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              {id.startsWith("user-")
+                ? "Yeni ilan tarayici hafizasindan okunuyor. Gorunmezse listeye donun."
+                : "Bu ilana ait kayit bulunamadi."}
+            </p>
+            <Button asChild className="mt-5 bg-primary text-primary-foreground hover:bg-primary/90">
+              <Link to="/listings">Ilanlara don</Link>
+            </Button>
+          </div>
+        </main>
+        <SiteFooter />
+      </div>
+    );
+  }
 
   const whatsappUrl = () => {
     const msg = `Hello Hajazna! I want to book ${listing.title} in ${listing.region} from ${

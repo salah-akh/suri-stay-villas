@@ -28,9 +28,9 @@ export function SiteHeader() {
               {t("nav.help")}
             </a>
             <LangSwitcher lang={lang} setLang={setLang} />
-            <a href="#" className="transition hover:text-white">
+            <Link to="/post-listing" className="transition hover:text-white">
               {t("nav.listVilla")}
-            </a>
+            </Link>
             <Link to="/admin" className="font-semibold transition hover:text-white">
               Admin
             </Link>
@@ -75,7 +75,7 @@ export function SiteHeader() {
               <User className="h-4 w-4" /> {t("nav.signIn")}
             </button>
             <Button asChild size="sm" className="h-9 bg-primary text-primary-foreground hover:bg-primary/90">
-              <Link to="/contact">
+              <Link to="/post-listing">
                 <Plus className="h-4 w-4" /> {t("nav.postListing")}
               </Link>
             </Button>
@@ -121,7 +121,7 @@ export function SiteHeader() {
                 Admin
               </Link>
               <Button asChild className="mt-2 bg-primary text-primary-foreground hover:bg-primary/90">
-                <Link to="/contact" onClick={() => setOpen(false)}>
+                <Link to="/post-listing" onClick={() => setOpen(false)}>
                   <Plus className="h-4 w-4" /> {t("nav.postListing")}
                 </Link>
               </Button>
