@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { z } from "zod";
 import { ArrowUpDown, Clock, MapPin, Plus, Search, Shield, SlidersHorizontal, Sun, X } from "lucide-react";
@@ -35,6 +35,14 @@ export const Route = createFileRoute("/listings")({
 });
 
 function ListingsPage() {
+  const isDetailPage = useRouterState({
+    select: (state) => state.location.pathname.startsWith("/listings/"),
+  });
+
+  return isDetailPage ? <Outlet /> : <ListingsIndexPage />;
+}
+
+function ListingsIndexPage() {
   const search = Route.useSearch();
   const [query, setQuery] = useState<string>(search.q ?? "");
   const [city, setCity] = useState<string>(search.city ?? "all");
