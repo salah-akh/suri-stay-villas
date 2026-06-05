@@ -12,6 +12,7 @@ import {
   Star,
 } from "lucide-react";
 import heroImage from "@/assets/hero.jpg";
+import { AdSlot } from "@/components/AdSlot";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { PropertyCard } from "@/components/PropertyCard";
@@ -169,6 +170,10 @@ function Index() {
             </div>
           </div>
         </section>
+
+        <div className="mx-auto max-w-7xl px-4 pb-2 sm:px-6">
+          <AdSlot slotId="home-inline" />
+        </div>
 
         <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14">
           <div className="mb-7 flex flex-wrap items-end justify-between gap-4">

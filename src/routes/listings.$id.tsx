@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArrowLeft, CalendarDays, Check, MapPin, MessageCircle, Shield, Sun } from "lucide-react";
+import { AdSlot } from "@/components/AdSlot";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -141,7 +142,7 @@ function ListingDetail() {
               </div>
             </div>
 
-            <aside className="h-fit rounded-lg border border-border/80 bg-card p-5 shadow-[var(--shadow-elegant)] lg:sticky lg:top-24">
+            <aside className="h-fit rounded-lg border border-border/80 bg-card p-5 shadow-[var(--shadow-elegant)] lg:sticky lg:top-36">
               <div className="rounded-lg bg-muted/70 p-4">
                 <div className="flex items-end gap-1">
                   <span className="text-3xl font-extrabold text-foreground">${listing.price_per_night}</span>
@@ -183,6 +184,7 @@ function ListingDetail() {
               <p className="mt-3 text-center text-xs leading-5 text-muted-foreground">
                 You will be redirected to WhatsApp to finish the booking with our team.
               </p>
+              <AdSlot slotId="listing-sidebar" variant="compact" className="mt-5" />
             </aside>
           </section>
         </div>

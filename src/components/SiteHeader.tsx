@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Globe, Heart, Home, Menu, Plus, User, X } from "lucide-react";
+import { AdSlot } from "@/components/AdSlot";
 import { Button } from "@/components/ui/button";
 import { useLanguage, type Lang } from "@/lib/i18n";
 
@@ -18,6 +19,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-secondary/95 text-secondary-foreground shadow-[var(--shadow-card)] backdrop-blur">
+      <AdSlot slotId="top" variant="top" />
       <div className="hidden border-b border-white/10 bg-black/10 md:block">
         <div className="mx-auto flex h-9 max-w-7xl items-center justify-end gap-5 px-4 text-xs text-secondary-foreground/75 sm:px-6">
           <a href="#" className="transition hover:text-white">
@@ -27,6 +29,9 @@ export function SiteHeader() {
           <a href="#" className="transition hover:text-white">
             {t("nav.listVilla")}
           </a>
+          <Link to="/admin" className="font-semibold transition hover:text-white">
+            Admin
+          </Link>
         </div>
       </div>
 
@@ -106,6 +111,13 @@ export function SiteHeader() {
                 {t(link.key)}
               </Link>
             ))}
+            <Link
+              to="/admin"
+              className="rounded-md px-2 py-3 text-sm font-semibold text-secondary-foreground/85"
+              onClick={() => setOpen(false)}
+            >
+              Admin
+            </Link>
             <Button asChild className="mt-2 bg-primary text-primary-foreground hover:bg-primary/90">
               <Link to="/contact" onClick={() => setOpen(false)}>
                 <Plus className="h-4 w-4" /> {t("nav.postListing")}

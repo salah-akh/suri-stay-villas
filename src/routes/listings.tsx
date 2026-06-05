@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { z } from "zod";
 import { ArrowUpDown, ChevronRight, MapPin, Shield, SlidersHorizontal, Sun, X } from "lucide-react";
+import { AdSlot } from "@/components/AdSlot";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { PropertyRow } from "@/components/PropertyCard";
@@ -169,7 +170,7 @@ function ListingsPage() {
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
           <div className="grid gap-5 lg:grid-cols-[280px_1fr]">
             <aside
-              className={`${showFilters ? "block" : "hidden"} h-fit rounded-lg border border-border/80 bg-card p-5 shadow-[var(--shadow-card)] lg:sticky lg:top-24 lg:block`}
+              className={`${showFilters ? "block" : "hidden"} h-fit rounded-lg border border-border/80 bg-card p-5 shadow-[var(--shadow-card)] lg:sticky lg:top-36 lg:block`}
             >
               <h2 className="mb-5 text-base font-extrabold text-foreground">Filters</h2>
               {Filters}
@@ -205,6 +206,8 @@ function ListingsPage() {
                   </Select>
                 </div>
               </div>
+
+              <AdSlot slotId="listings-inline" className="mb-4" />
 
               {filtered.length === 0 ? (
                 <div className="rounded-lg border border-border/80 bg-card p-10 text-center shadow-[var(--shadow-card)]">
