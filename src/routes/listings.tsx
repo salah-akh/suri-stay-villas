@@ -168,17 +168,3 @@ function ListingsPage() {
     </div>
   );
 }
-
-// removed legacy markup below
-function _Unused() {
-  return (
-    <>
-      {/* legacy wrapper kept blank */}
-      <div className="mb-5 flex lg:hidden">
-            <Button variant="outline" size="sm" className="gap-2">
-              <SlidersHorizontal className="h-4 w-4" /> Filters
-            </Button>
-          </div>
-    </>
-  );
-}
