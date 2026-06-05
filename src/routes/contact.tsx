@@ -11,9 +11,9 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact SuriStay — Get in Touch" },
-      { name: "description", content: "Reach the SuriStay team via WhatsApp, email, or our contact form. We respond quickly." },
-      { property: "og:title", content: "Contact SuriStay" },
+      { title: "Contact Hajazna — Get in Touch" },
+      { name: "description", content: "Reach the Hajazna team via WhatsApp, email, or our contact form. We respond quickly." },
+      { property: "og:title", content: "Contact Hajazna" },
     ],
   }),
   component: Contact,
@@ -74,7 +74,7 @@ function Contact() {
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary"><Mail className="h-5 w-5" /></div>
                 <div>
                   <h3 className="font-semibold">Email</h3>
-                  <p className="text-sm text-muted-foreground">hello@suristay.com</p>
+                  <p className="text-sm text-muted-foreground">hello@hajazna.com</p>
                 </div>
               </div>
               <div className="flex items-start gap-4 rounded-2xl border border-border/60 bg-card p-6 shadow-[var(--shadow-card)]">

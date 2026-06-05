@@ -16,7 +16,7 @@ export const Route = createFileRoute("/listings/$id")({
   },
   head: ({ loaderData }) => ({
     meta: loaderData ? [
-      { title: `${loaderData.listing.title} — SuriStay` },
+      { title: `${loaderData.listing.title} — Hajazna` },
       { name: "description", content: loaderData.listing.description },
       { property: "og:title", content: loaderData.listing.title },
       { property: "og:description", content: loaderData.listing.description },
@@ -41,7 +41,7 @@ function ListingDetail() {
   const [checkOut, setCheckOut] = useState("");
 
   const whatsappUrl = () => {
-    const msg = `Hello SuriStay! I want to book ${listing.title} in ${listing.region} from ${checkIn || "[Check-In]"} to ${checkOut || "[Check-Out]"}.`;
+    const msg = `Hello Hajazna! I want to book ${listing.title} in ${listing.region} from ${checkIn || "[Check-In]"} to ${checkOut || "[Check-Out]"}.`;
     return `https://wa.me/963000000000?text=${encodeURIComponent(msg)}`;
   };
 

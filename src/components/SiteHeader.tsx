@@ -27,7 +27,7 @@ export function SiteHeader() {
       <div className="mx-auto flex h-14 max-w-7xl items-center gap-4 px-4 sm:px-6">
         <Link to="/" className="flex items-center">
           <span className="bg-primary px-2.5 py-1 text-lg font-extrabold tracking-tight text-primary-foreground">
-            suristay<span className="text-price">.com</span>
+            حجزنا<span className="text-price">.com</span>
           </span>
         </Link>
 

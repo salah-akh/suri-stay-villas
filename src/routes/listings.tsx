@@ -20,9 +20,9 @@ export const Route = createFileRoute("/listings")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "All Villas — SuriStay" },
+      { title: "All Villas — Hajazna" },
       { name: "description", content: "Browse premium villas and vacation rentals across Syria. Filter by city, price, and amenities." },
-      { property: "og:title", content: "All Villas — SuriStay" },
+      { property: "og:title", content: "All Villas — Hajazna" },
     ],
   }),
   component: ListingsPage,
