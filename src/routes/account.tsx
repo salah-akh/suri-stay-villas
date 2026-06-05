@@ -39,7 +39,7 @@ function AccountPage() {
             <p className="mt-1 text-xs leading-5 text-muted-foreground">
               {user
                 ? "Mesaj gonderebilir, mesajlarinizi gorebilir ve ilan verebilirsiniz."
-                : "Mesaj gondermek veya ilan vermek istediginizde mail ve sifre ile hesap olusturmaniz istenecek."}
+                : "Mesaj gondermek veya ilan vermek istediginizde once giris yapmaniz istenecek."}
             </p>
           </div>
           <div className="mt-5 grid gap-3">
@@ -57,9 +57,14 @@ function AccountPage() {
               <LogOut className="h-4 w-4" /> Cikis yap
             </Button>
           ) : (
-            <Button asChild className="mt-5 w-full bg-primary text-primary-foreground hover:bg-primary/90">
-              <Link to="/messages">Giris / hesap olustur</Link>
-            </Button>
+            <>
+              <Button asChild className="mt-5 w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                <Link to="/messages">Giris yap</Link>
+              </Button>
+              <p className="mt-2 text-center text-xs font-semibold text-muted-foreground">
+                Hesap olustur secenegi giris ekraninin altinda.
+              </p>
+            </>
           )}
         </section>
       </main>

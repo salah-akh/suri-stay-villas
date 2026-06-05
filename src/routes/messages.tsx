@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
-import { Inbox, Lock, Mail, MessageCircle, Send } from "lucide-react";
+import { useState } from "react";
+import { Inbox, MessageCircle, Send } from "lucide-react";
 import { z } from "zod";
+import { AuthPrompt } from "@/components/AuthPrompt";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
@@ -28,7 +29,7 @@ function MessagesPage() {
   const { listings } = useListingsCatalog();
   const selectedListing = listings.find((listing) => listing.id === search.listing);
   const [messageSent, setMessageSent] = useState(false);
-  const { user, login } = useAuthUser();
+  const { user, login, register } = useAuthUser();
 
   return (
     <div className="flex min-h-screen flex-col bg-muted/40">
@@ -44,9 +45,16 @@ function MessagesPage() {
           </p>
 
           {!user ? (
-            <AuthRequiredBox
-              selectedListingTitle={selectedListing?.title}
-              onAuth={login}
+            <AuthPrompt
+              title="Mesaj icin giris gerekli"
+              loginDescription={
+                selectedListing
+                  ? `${selectedListing.title} ilanina mesaj gondermek icin once giris yapin.`
+                  : "Mesajlari gormek icin once giris yapin."
+              }
+              registerDescription="Hesabiniz yoksa mail ve sifreyle yeni hesap olusturun."
+              onLogin={login}
+              onRegister={register}
             />
           ) : selectedListing ? (
             <div className="mt-5 rounded-lg border border-primary/20 bg-primary/5 p-4">
@@ -111,79 +119,5 @@ function MessagesPage() {
       </main>
       <SiteFooter />
     </div>
-  );
-}
-
-function AuthRequiredBox({
-  selectedListingTitle,
-  onAuth,
-}: {
-  selectedListingTitle?: string;
-  onAuth: (email: string, password: string) => boolean;
-}) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-
-  const submitAuth = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const ok = onAuth(email, password);
-
-    if (!ok) {
-      setError("Gecerli bir mail ve en az 4 karakterli sifre girin.");
-    }
-  };
-
-  return (
-    <form onSubmit={submitAuth} className="mt-5 rounded-lg border border-primary/20 bg-primary/5 p-4">
-      <p className="flex items-center gap-2 text-sm font-extrabold text-foreground">
-        <Lock className="h-4 w-4 text-primary" /> Mesaj icin hesap gerekli
-      </p>
-      <p className="mt-1 text-xs leading-5 text-muted-foreground">
-        {selectedListingTitle
-          ? `${selectedListingTitle} ilanina mesaj gondermek icin giris yapin veya hesap olusturun.`
-          : "Mesajlari gormek icin giris yapin veya hesap olusturun."}
-      </p>
-
-      <label className="mt-4 block">
-        <span className="mb-1.5 block text-xs font-extrabold text-muted-foreground">Mail adresi</span>
-        <div className="relative">
-          <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
-          <input
-            type="email"
-            value={email}
-            onChange={(event) => {
-              setEmail(event.target.value);
-              setError("");
-            }}
-            placeholder="ornek@mail.com"
-            className="h-11 w-full rounded-md border border-border/80 bg-background pl-10 pr-3 text-sm font-medium text-foreground outline-none transition focus:border-primary"
-          />
-        </div>
-      </label>
-
-      <label className="mt-3 block">
-        <span className="mb-1.5 block text-xs font-extrabold text-muted-foreground">Sifre</span>
-        <div className="relative">
-          <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
-          <input
-            type="password"
-            value={password}
-            onChange={(event) => {
-              setPassword(event.target.value);
-              setError("");
-            }}
-            placeholder="En az 4 karakter"
-            className="h-11 w-full rounded-md border border-border/80 bg-background pl-10 pr-3 text-sm font-medium text-foreground outline-none transition focus:border-primary"
-          />
-        </div>
-      </label>
-
-      {error && <p className="mt-3 rounded-md bg-destructive/10 px-3 py-2 text-xs font-bold text-destructive">{error}</p>}
-
-      <Button type="submit" className="mt-4 w-full bg-primary text-primary-foreground hover:bg-primary/90">
-        Giriş yap / hesap oluştur
-      </Button>
-    </form>
   );
 }
