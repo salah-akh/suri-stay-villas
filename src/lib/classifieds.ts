@@ -1,48 +1,49 @@
-export const defaultCategoryPath = ["Emlak", "Konut", "Günlük Kiralık", "Villa"] as const;
+export const defaultCategoryPath = ["Emlak", "Konut", "Gunluk Kiralik", "Villa"] as const;
 
 export const listingCategories = [
   {
     id: "daily-villa",
-    title: "Günlük Kiralık Villa",
-    path: ["Emlak", "Konut", "Günlük Kiralık", "Villa"],
+    title: "Gunluk Kiralik Villa",
+    path: ["Emlak", "Konut", "Gunluk Kiralik", "Villa"],
     type: "Villa",
   },
   {
     id: "summer-house",
-    title: "Yazlık",
-    path: ["Emlak", "Konut", "Günlük Kiralık", "Yazlık"],
+    title: "Yazlik",
+    path: ["Emlak", "Konut", "Gunluk Kiralik", "Yazlik"],
     type: "Yazlik",
   },
   {
     id: "beach-villa",
-    title: "Denize Yakın Villa",
-    path: ["Emlak", "Konut", "Günlük Kiralık", "Denize Yakın Villa"],
+    title: "Denize Yakin Villa",
+    path: ["Emlak", "Konut", "Gunluk Kiralik", "Denize Yakin Villa"],
     type: "Beach Villa",
   },
   {
     id: "private-villa",
     title: "Muhafazakar Villa",
-    path: ["Emlak", "Konut", "Günlük Kiralık", "Muhafazakar Villa"],
+    path: ["Emlak", "Konut", "Gunluk Kiralik", "Muhafazakar Villa"],
     type: "Ozel Villa",
   },
   {
     id: "mountain-house",
-    title: "Dağ Evi",
-    path: ["Emlak", "Konut", "Günlük Kiralık", "Dağ Evi"],
+    title: "Dag Evi",
+    path: ["Emlak", "Konut", "Gunluk Kiralik", "Dag Evi"],
     type: "Mountain Chalet",
   },
   {
     id: "bungalow",
     title: "Bungalov",
-    path: ["Emlak", "Konut", "Günlük Kiralık", "Bungalov"],
+    path: ["Emlak", "Konut", "Gunluk Kiralik", "Bungalov"],
     type: "Bungalov",
   },
 ] as const;
 
 export const roomOptions = ["1+1", "2+1", "3+1", "4+1", "5+1", "6+2"] as const;
 export const advertiserTypes = ["Ev sahibinden", "Emlak Ofisinden", "Turizm Acentesinden"] as const;
+
 const fallbackAreas = [85, 105, 120, 140, 160, 190, 220, 260] as const;
-const fallbackDates = ["Bugün", "Dün", "2 gün önce", "3 gün önce", "1 hafta önce"] as const;
+const fallbackDates = ["Bugun", "Dun", "2 gun once", "3 gun once", "1 hafta once"] as const;
 
 export function formatCategoryPath(path?: readonly string[]) {
   return path?.length ? path.join(" / ") : defaultCategoryPath.join(" / ");

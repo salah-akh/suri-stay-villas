@@ -119,7 +119,7 @@ function PostListingPage() {
     }
 
     if (!Number.isFinite(draft.areaM2) || draft.areaM2 <= 0) {
-      toast.error("Gecerli bir m² bilgisi yazin.");
+      toast.error("Gecerli bir m2 bilgisi yazin.");
       return;
     }
 
@@ -157,20 +157,20 @@ function PostListingPage() {
               <ArrowLeft className="h-4 w-4" /> Ana sayfa
             </Link>
             <p className="flex items-center gap-2 text-sm font-semibold text-primary">
-              <Send className="h-4 w-4" /> Ücretsiz ilan ver
+              <Send className="h-4 w-4" /> Ucretsiz ilan ver
             </p>
             <h1 className="mt-2 text-3xl font-extrabold text-foreground sm:text-4xl">
-              Villa veya yazlığını yayınla
+              Villa veya yazligini yayinla
             </h1>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-              Önce kategoriyi seç, sonra ilan bilgilerini gir. Yayınlandıktan sonra ilan listede görünür.
+              Once kategoriyi sec, sonra ilan bilgilerini gir. Yayinlandiktan sonra ilan listede gorunur.
             </p>
           </div>
         </section>
 
         <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6">
           <div className="mb-4 grid gap-2 rounded-lg border border-border/80 bg-card p-4 text-sm shadow-[var(--shadow-card)] sm:grid-cols-3">
-            {["1. Kategori seç", "2. İlan bilgileri", "3. Fotoğraf ve iletişim"].map((step) => (
+            {["1. Kategori sec", "2. Ilan bilgileri", "3. Fotograf ve iletisim"].map((step) => (
               <div key={step} className="rounded-md bg-primary/10 px-3 py-2 font-extrabold text-primary">
                 {step}
               </div>
@@ -182,9 +182,9 @@ function PostListingPage() {
             className="rounded-lg border border-border/80 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6"
           >
             <section className="mb-6">
-              <h2 className="text-lg font-extrabold text-foreground">Kategori seç</h2>
+              <h2 className="text-lg font-extrabold text-foreground">Kategori sec</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                İlan listede bu kategori altında gösterilir.
+                Ilan listede bu kategori altinda gosterilir.
               </p>
               <div className="mt-4 grid gap-2 sm:grid-cols-2">
                 {listingCategories.map((category) => {
@@ -245,7 +245,7 @@ function PostListingPage() {
                 />
               </Field>
 
-              <Field label="İlan tipi" id="listing-type">
+              <Field label="Ilan tipi" id="listing-type">
                 <Select value={draft.propertyType} onValueChange={(value) => updateDraft("propertyType", value)}>
                   <SelectTrigger id="listing-type" className="h-11 rounded-md bg-background">
                     <SelectValue />
@@ -260,7 +260,7 @@ function PostListingPage() {
                 </Select>
               </Field>
 
-              <Field label="m²" id="listing-area">
+              <Field label="m2" id="listing-area">
                 <Input
                   id="listing-area"
                   type="number"
@@ -271,7 +271,7 @@ function PostListingPage() {
                 />
               </Field>
 
-              <Field label="Oda sayısı" id="listing-room">
+              <Field label="Oda sayisi" id="listing-room">
                 <Select value={draft.roomCount} onValueChange={(value) => updateDraft("roomCount", value)}>
                   <SelectTrigger id="listing-room" className="h-11 rounded-md bg-background">
                     <SelectValue />
@@ -299,7 +299,7 @@ function PostListingPage() {
                 />
               </Field>
 
-              <Field label="İlan veren tipi" id="listing-advertiser">
+              <Field label="Ilan veren tipi" id="listing-advertiser">
                 <Select value={draft.advertiserType} onValueChange={(value) => updateDraft("advertiserType", value)}>
                   <SelectTrigger id="listing-advertiser" className="h-11 rounded-md bg-background">
                     <SelectValue />
@@ -314,7 +314,7 @@ function PostListingPage() {
                 </Select>
               </Field>
 
-              <Field label="İlan veren adı" id="listing-contact-name">
+              <Field label="Ilan veren adi" id="listing-contact-name">
                 <div className="relative">
                   <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
                   <Input
@@ -400,24 +400,24 @@ function PostListingPage() {
                   checked={draft.hasSolarPower}
                   onCheckedChange={(value) => updateDraft("hasSolarPower", !!value)}
                 />
-                <Sun className="h-4 w-4 text-primary" /> Güneş enerjisi var
+                <Sun className="h-4 w-4 text-primary" /> Gunes enerjisi var
               </label>
               <label className="flex items-center gap-3 rounded-lg border border-border/80 bg-background p-4 text-sm font-semibold text-foreground">
                 <Checkbox
                   checked={draft.isConservativePrivate}
                   onCheckedChange={(value) => updateDraft("isConservativePrivate", !!value)}
                 />
-                <Shield className="h-4 w-4 text-primary" /> Aileye uygun / özel
+                <Shield className="h-4 w-4 text-primary" /> Aileye uygun / ozel
               </label>
             </div>
 
             <div className="mt-5 rounded-lg bg-muted/70 p-4 text-sm text-muted-foreground">
-              <p className="font-extrabold text-foreground">Özet</p>
+              <p className="font-extrabold text-foreground">Ozet</p>
               <p className="mt-2 flex items-center gap-2">
                 <Home className="h-4 w-4 text-primary" /> {formatCategoryPath(draft.categoryPath)}
               </p>
               <p className="mt-1 flex items-center gap-2">
-                <Ruler className="h-4 w-4 text-primary" /> {draft.areaM2} m² · {draft.roomCount} · ${draft.pricePerNight} / gece
+                <Ruler className="h-4 w-4 text-primary" /> {draft.areaM2} m2 - {draft.roomCount} - ${draft.pricePerNight} / gece
               </p>
             </div>
 

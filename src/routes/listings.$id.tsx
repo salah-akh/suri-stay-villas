@@ -101,8 +101,8 @@ function ListingDetail() {
               </span>
             </p>
             <div className="mt-4 grid gap-2 sm:grid-cols-4">
-              <InfoPill icon={<Hash className="h-4 w-4" />} label="İlan No" value={listingNo} />
-              <InfoPill icon={<Ruler className="h-4 w-4" />} label="m²" value={`${area} m²`} />
+              <InfoPill icon={<Hash className="h-4 w-4" />} label="Ilan No" value={listingNo} />
+              <InfoPill icon={<Ruler className="h-4 w-4" />} label="m2" value={`${area} m2`} />
               <InfoPill icon={<Grid2X2 className="h-4 w-4" />} label="Oda" value={room} />
               <InfoPill icon={<CalendarDays className="h-4 w-4" />} label="Tarih" value={publishedAt} />
             </div>
@@ -148,10 +148,10 @@ function ListingDetail() {
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
                   <InfoRow icon={<Home className="h-4 w-4" />} label="Tip" value={listing.property_type} />
                   <InfoRow icon={<MapPin className="h-4 w-4" />} label="Konum" value={`${listing.city} / ${listing.region}`} />
-                  <InfoRow icon={<Ruler className="h-4 w-4" />} label="m²" value={`${area} m²`} />
-                  <InfoRow icon={<Grid2X2 className="h-4 w-4" />} label="Oda sayısı" value={room} />
-                  <InfoRow icon={<User className="h-4 w-4" />} label="İlan veren" value={advertiserType} />
-                  <InfoRow icon={<CalendarDays className="h-4 w-4" />} label="İlan tarihi" value={publishedAt} />
+                  <InfoRow icon={<Ruler className="h-4 w-4" />} label="m2" value={`${area} m2`} />
+                  <InfoRow icon={<Grid2X2 className="h-4 w-4" />} label="Oda sayisi" value={room} />
+                  <InfoRow icon={<User className="h-4 w-4" />} label="Ilan veren" value={advertiserType} />
+                  <InfoRow icon={<CalendarDays className="h-4 w-4" />} label="Ilan tarihi" value={publishedAt} />
                 </div>
               </div>
 
@@ -188,7 +188,7 @@ function ListingDetail() {
                 <p className="mt-1 text-sm text-muted-foreground">Gecelik fiyat</p>
               </div>
               <div className="mt-5 rounded-lg bg-muted/70 p-4">
-                <p className="text-xs font-semibold text-muted-foreground">İlan veren</p>
+                <p className="text-xs font-semibold text-muted-foreground">Ilan veren</p>
                 <p className="mt-1 font-extrabold text-foreground">{contactName}</p>
                 <p className="mt-1 text-sm text-muted-foreground">{advertiserType}</p>
                 <p className="mt-2 text-sm font-semibold text-primary">{contactPhone}</p>
