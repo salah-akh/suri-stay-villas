@@ -152,8 +152,16 @@ function ListingDetail() {
             </div>
 
             <aside className="h-fit rounded-lg border border-border/80 bg-card p-5 shadow-[var(--shadow-card)] lg:sticky lg:top-24">
-              <div className="text-3xl font-extrabold text-foreground">${listing.price_per_night}</div>
-              <p className="mt-1 text-sm text-muted-foreground">Gecelik fiyat</p>
+              <p className="text-sm font-extrabold text-primary">Bu ilani kiralamak icin</p>
+              <ol className="mt-3 space-y-2 text-sm leading-6 text-muted-foreground">
+                <li>1. Fotograf ve bilgileri kontrol et.</li>
+                <li>2. WhatsApp ile sor butonuna bas.</li>
+                <li>3. Musaitlik ve odemeyi ev sahibiyle netlestir.</li>
+              </ol>
+              <div className="mt-5 border-t border-border/70 pt-5">
+                <div className="text-3xl font-extrabold text-foreground">${listing.price_per_night}</div>
+                <p className="mt-1 text-sm text-muted-foreground">Gecelik fiyat</p>
+              </div>
               <Button asChild size="lg" className="mt-5 w-full bg-primary text-primary-foreground hover:bg-primary/90">
                 <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">
                   <MessageCircle className="h-5 w-5" /> WhatsApp ile sor

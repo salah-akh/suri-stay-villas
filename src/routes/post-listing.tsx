@@ -145,6 +145,14 @@ function PostListingPage() {
         </section>
 
         <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6">
+          <div className="mb-4 grid gap-2 rounded-lg border border-border/80 bg-card p-4 text-sm shadow-[var(--shadow-card)] sm:grid-cols-3">
+            {["1. Bilgileri yaz", "2. Fotograf yukle", "3. Ilani yayinla"].map((step) => (
+              <div key={step} className="rounded-md bg-primary/10 px-3 py-2 font-extrabold text-primary">
+                {step}
+              </div>
+            ))}
+          </div>
+
           <form
             onSubmit={onSubmit}
             className="rounded-lg border border-border/80 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6"

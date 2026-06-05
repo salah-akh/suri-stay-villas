@@ -25,7 +25,7 @@ export function AppBottomNav() {
           activeProps={{ className: activeNavItemClass }}
         >
           <Search className="h-4 w-4" />
-          Ara
+          Ilanlar
         </Link>
         <Link
           to="/post-listing"

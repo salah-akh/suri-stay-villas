@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Home, Menu, Plus, Settings, X } from "lucide-react";
+import { Home, Menu, Plus, X } from "lucide-react";
 import { AdSlot } from "@/components/AdSlot";
 import { AppBottomNav } from "@/components/AppBottomNav";
 import { Button } from "@/components/ui/button";
@@ -49,12 +49,6 @@ export function SiteHeader() {
           </nav>
 
           <div className="ml-auto hidden items-center gap-2 md:flex">
-            <Link
-              to="/admin"
-              className="inline-flex h-9 items-center gap-1.5 rounded-md px-3 text-sm font-semibold text-muted-foreground transition hover:bg-primary/10 hover:text-primary"
-            >
-              <Settings className="h-4 w-4" /> Ayarlar
-            </Link>
             <Button asChild size="sm" className="h-9 bg-primary text-primary-foreground hover:bg-primary/90">
               <Link to="/post-listing">
                 <Plus className="h-4 w-4" /> Ilan ver
@@ -84,13 +78,6 @@ export function SiteHeader() {
                   {link.label}
                 </Link>
               ))}
-              <Link
-                to="/admin"
-                className="rounded-md px-2 py-3 text-sm font-semibold text-muted-foreground"
-                onClick={() => setOpen(false)}
-              >
-                Ayarlar
-              </Link>
               <Button asChild className="mt-2 bg-primary text-primary-foreground hover:bg-primary/90">
                 <Link to="/post-listing" onClick={() => setOpen(false)}>
                   <Plus className="h-4 w-4" /> Ilan ver

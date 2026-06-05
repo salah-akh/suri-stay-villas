@@ -135,6 +135,21 @@ function ListingsIndexPage() {
                 <X className="h-4 w-4" /> Temizle
               </Button>
             </div>
+
+            <div className="mt-4 grid gap-2 text-sm sm:grid-cols-3">
+              {[
+                "1. Sehir veya tip sec",
+                "2. Begendigin ilana bas",
+                "3. WhatsApp ile sor",
+              ].map((step) => (
+                <div
+                  key={step}
+                  className="rounded-md border border-border/80 bg-background px-3 py-2 font-semibold text-muted-foreground"
+                >
+                  {step}
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -142,6 +157,9 @@ function ListingsIndexPage() {
           <div className="mb-4 flex items-center justify-between gap-3">
             <p className="text-sm text-muted-foreground">
               <span className="font-bold text-foreground">{filtered.length}</span> ilan gosteriliyor
+            </p>
+            <p className="hidden text-sm font-semibold text-primary sm:block">
+              Detay icin ilana dokun
             </p>
           </div>
 

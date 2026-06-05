@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
-import { BadgeCheck, MapPin, Plus, Search } from "lucide-react";
+import { useMemo, useState, type ReactNode } from "react";
+import { BadgeCheck, MapPin, MessageCircle, Plus, Search } from "lucide-react";
 import { PropertyCard } from "@/components/PropertyCard";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -56,7 +56,7 @@ function Index() {
                   Sana uygun kiralik villayi bul
                 </h1>
                 <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">
-                  Sehir ve konaklama tipini sec, uygun ilanlara hizlica ulas.
+                  Ne yapmak istiyorsan asagidan sec. Uygulama seni adim adim yonlendirir.
                 </p>
               </div>
               <Button asChild variant="outline" className="h-11 bg-background">
@@ -66,7 +66,29 @@ function Index() {
               </Button>
             </div>
 
+            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+              <QuickAction
+                to="/listings"
+                icon={<Search className="h-5 w-5" />}
+                title="Villa bul"
+                text="Ilanlari gor ve begendigine bas."
+              />
+              <QuickAction
+                to="/post-listing"
+                icon={<Plus className="h-5 w-5" />}
+                title="Ilan ver"
+                text="Fotograf yukle, bilgileri yaz, yayinla."
+              />
+              <QuickAction
+                to="/contact"
+                icon={<MessageCircle className="h-5 w-5" />}
+                title="Destek al"
+                text="Takildigin yerde bize yaz."
+              />
+            </div>
+
             <div className="mt-5 rounded-lg border border-border/80 bg-background p-3 shadow-[var(--shadow-card)]">
+              <p className="mb-3 text-sm font-extrabold text-foreground">Hizli arama</p>
               <div className="grid gap-3 md:grid-cols-[1fr_1fr_auto]">
                 <Select value={city} onValueChange={setCity}>
                   <SelectTrigger className="h-12 rounded-md bg-card">
@@ -99,7 +121,7 @@ function Index() {
                 </Select>
 
                 <Button onClick={onSearch} className="h-12 min-w-32 bg-primary text-primary-foreground hover:bg-primary/90">
-                  <Search className="h-4 w-4" /> Ara
+                  <Search className="h-4 w-4" /> Ilanlari goster
                 </Button>
               </div>
             </div>
@@ -125,5 +147,30 @@ function Index() {
       </main>
       <SiteFooter />
     </div>
+  );
+}
+
+function QuickAction({
+  to,
+  icon,
+  title,
+  text,
+}: {
+  to: "/listings" | "/post-listing" | "/contact";
+  icon: ReactNode;
+  title: string;
+  text: string;
+}) {
+  return (
+    <Link
+      to={to}
+      className="group rounded-lg border border-border/80 bg-background p-4 shadow-[var(--shadow-card)] transition hover:border-primary/40"
+    >
+      <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary/10 text-primary transition group-hover:bg-primary group-hover:text-primary-foreground">
+        {icon}
+      </span>
+      <h2 className="mt-3 text-base font-extrabold text-foreground">{title}</h2>
+      <p className="mt-1 text-sm leading-6 text-muted-foreground">{text}</p>
+    </Link>
   );
 }
