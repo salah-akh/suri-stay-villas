@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Inbox, MessageCircle, Send } from "lucide-react";
 import { z } from "zod";
 import { AuthPrompt } from "@/components/AuthPrompt";
@@ -34,9 +34,9 @@ function MessagesPage() {
   return (
     <div className="flex min-h-screen flex-col bg-muted/40">
       <SiteHeader />
-      <main className="flex flex-1 justify-center px-4 py-6 sm:py-10">
-        <section className="w-full max-w-md rounded-lg border border-border/80 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6">
-          <span className="flex h-12 w-12 items-center justify-center rounded-md bg-primary/10 text-primary">
+      <main className="flex-1 px-4 py-5 sm:px-6 sm:py-8">
+        <section className="mx-auto max-w-md">
+          <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary/10 text-primary">
             <MessageCircle className="h-5 w-5" />
           </span>
           <h1 className="mt-4 text-2xl font-extrabold text-foreground">Mesajlar</h1>
@@ -57,11 +57,11 @@ function MessagesPage() {
               onRegister={register}
             />
           ) : selectedListing ? (
-            <div className="mt-5 rounded-lg border border-primary/20 bg-primary/5 p-4">
-              <p className="mb-3 rounded-md bg-muted/70 px-3 py-2 text-xs font-bold text-muted-foreground">
-                Giriş yapan hesap: <span className="text-foreground">{user.email}</span>
+            <div className="mt-6 border-t border-border/70 pt-5">
+              <p className="text-xs font-bold text-muted-foreground">
+                Giris yapan hesap: <span className="text-foreground">{user.email}</span>
               </p>
-              <p className="text-xs font-extrabold text-primary">Mesaj gonderilecek ilan</p>
+              <p className="mt-5 text-xs font-extrabold text-primary">Mesaj gonderilecek ilan</p>
               <h2 className="mt-1 line-clamp-2 text-base font-extrabold text-foreground">
                 {selectedListing.title}
               </h2>
@@ -89,35 +89,49 @@ function MessagesPage() {
               )}
             </div>
           ) : (
-            <div className="mt-5 rounded-lg border border-border/80 bg-muted/60 p-4">
+            <div className="mt-6 border-t border-border/70 pt-5">
               <p className="text-sm font-bold text-foreground">Mesajlasmak icin bir ilan secin.</p>
               <p className="mt-1 text-xs text-muted-foreground">
                 Ilan detayindaki Mesaj gonder butonuyla bu ekrana gelebilirsiniz.
               </p>
             </div>
           )}
+
           {user && (
-            <div className="mt-5 grid gap-3">
-            <div className="rounded-md bg-muted/70 p-3">
-              <p className="flex items-center gap-2 text-sm font-extrabold text-foreground">
-                <Inbox className="h-4 w-4 text-primary" /> Gelen mesajlar
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground">Ev sahibi oldugunuz ilanlardan gelenler.</p>
+            <div className="mt-6 divide-y divide-border/70 border-y border-border/70">
+              <MessageMenuRow
+                icon={<Inbox className="h-4 w-4" />}
+                title="Gelen mesajlar"
+                text="Ev sahibi oldugunuz ilanlardan gelenler."
+              />
+              <MessageMenuRow
+                icon={<Send className="h-4 w-4" />}
+                title="Gonderilen mesajlar"
+                text="Kiralamak istediginiz ilanlara yazdiklariniz."
+              />
             </div>
-            <div className="rounded-md bg-muted/70 p-3">
-              <p className="flex items-center gap-2 text-sm font-extrabold text-foreground">
-                <Send className="h-4 w-4 text-primary" /> Gonderilen mesajlar
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground">Kiralamak istediginiz ilanlara yazdiklariniz.</p>
-            </div>
-          </div>
           )}
-          <Button asChild className="mt-5 w-full bg-primary text-primary-foreground hover:bg-primary/90">
+
+          <Button asChild className="mt-6 w-full bg-primary text-primary-foreground hover:bg-primary/90">
             <Link to="/">Ilanlara don</Link>
           </Button>
         </section>
       </main>
       <SiteFooter />
+    </div>
+  );
+}
+
+function MessageMenuRow({ icon, title, text }: { icon: ReactNode; title: string; text: string }) {
+  return (
+    <div className="flex items-start gap-3 py-4">
+      <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+        {icon}
+      </span>
+      <span className="min-w-0">
+        <span className="block text-sm font-extrabold text-foreground">{title}</span>
+        <span className="mt-1 block text-xs leading-5 text-muted-foreground">{text}</span>
+      </span>
     </div>
   );
 }

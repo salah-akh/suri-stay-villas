@@ -42,11 +42,11 @@ export function AuthPrompt({
   };
 
   return (
-    <form onSubmit={submitAuth} className="rounded-lg border border-primary/20 bg-card p-5 shadow-[var(--shadow-card)] sm:p-6">
-      <span className="flex h-12 w-12 items-center justify-center rounded-md bg-primary/10 text-primary">
+    <form onSubmit={submitAuth} className="mt-5 py-2">
+      <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary/10 text-primary">
         <Lock className="h-5 w-5" />
       </span>
-      <h2 className="mt-4 text-2xl font-extrabold text-foreground">{title}</h2>
+      <h2 className="mt-4 text-xl font-extrabold text-foreground">{title}</h2>
       <p className="mt-2 text-sm leading-6 text-muted-foreground">
         {isLogin ? loginDescription : registerDescription}
       </p>
