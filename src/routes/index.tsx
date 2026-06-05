@@ -12,9 +12,9 @@ import { listings, cities, propertyTypes } from "@/data/listings";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "SuriStay — Discover Exceptional Villas Across Syria" },
+      { title: "Hajazna — Discover Exceptional Villas Across Syria" },
       { name: "description", content: "Find private villas, family retreats, and unique stays across Syria — from Damascus to the Mediterranean coast." },
-      { property: "og:title", content: "SuriStay — Discover Exceptional Villas Across Syria" },
+      { property: "og:title", content: "Hajazna — Discover Exceptional Villas Across Syria" },
       { property: "og:description", content: "Find private villas, family retreats, and unique stays across Syria." },
     ],
   }),
